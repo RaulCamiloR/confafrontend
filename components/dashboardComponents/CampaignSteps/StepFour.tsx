@@ -51,7 +51,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
 
     try {
 
-      const response = await fetch("https://hh26txkj87.execute-api.us-west-2.amazonaws.com/v1/campaign/create-campaign", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/campaign/create-campaign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

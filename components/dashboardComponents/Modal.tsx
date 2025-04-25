@@ -117,58 +117,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     setCurrentStep(3);
   };
 
-  const checkSegmentStatus = async (processingId: string) => {
-    const maxAttempts = 20; // Maximum number of polling attempts
-    const initialDelay = 1000; // Start with 1 second delay
-    const maxDelay = 5000; // Maximum delay of 5 seconds
-    let currentDelay = initialDelay;
-    let attempts = 0;
-    
-    while (attempts < maxAttempts) {
-      try {
-        // Log to see progress in development
-        console.log(`Checking segment status (attempt ${attempts + 1}/${maxAttempts})...`);
-        
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/segment/status?processingId=${processingId}`
-        );
-        
-        // Log response to understand its structure
-        console.log('Status response:', response.data);
-        
-        // Check if processing is complete based on response
-        // Adjust this condition based on your API's actual response structure
-        if (response.data.status === 'COMPLETED') {
-          return true; // Successfully processed
-        }
-        
-        // If we get here, segment is still processing
-        attempts++;
-        
-        // Wait before next attempt with exponential backoff
-        await new Promise(resolve => setTimeout(resolve, currentDelay));
-        
-        // Increase delay for next attempt (capped at maxDelay)
-        currentDelay = Math.min(currentDelay * 1.5, maxDelay);
-        
-      } catch (error) {
-        console.error('Error checking segment status:', error);
-        
-        // If we're getting consistent errors, give up after fewer attempts
-        if (attempts >= 5) {
-          throw new Error('Unable to verify segment processing status');
-        }
-        
-        attempts++;
-        await new Promise(resolve => setTimeout(resolve, currentDelay));
-        currentDelay = Math.min(currentDelay * 1.5, maxDelay);
-      }
-    }
-    
-    // If we exhausted all attempts and still no success
-    throw new Error('Segment processing timed out');
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !uniqueSegmentName) {
@@ -182,8 +130,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
       
       console.log('Segmento:', uniqueSegmentName);
       console.log('Tipo de canal:', channelType);
-      console.log('Nombre del archivo:', file?.name);
-      console.log('Tipo de archivo:', file?.type);
+
+      console.log('Nombre del archivo:', file?.name)
+      console.log('Tipo de archivo:', file?.type)
+      
       console.log('Archivo:', file);
 
       const { data } = await axios.post('/api/geturl', {
@@ -191,9 +141,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         channelType: channelType,
         fileName: file?.name,
         fileType: file?.type
-      });
+      })
 
       console.log('URL prefirmada:', data.data.uploadUrl);
+      
       
       const response = await axios.put(data.data.uploadUrl, file, {
         headers: {
@@ -203,17 +154,17 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
       console.log('response', response.status);
 
+      console.log({uniqueSegmentName})
+
       if(response.status !== 200) {
         throw new Error('Error al subir el archivo');
       }
 
-      // Update status to indicate we're processing
-      setUploadStatus('Procesando segmento...');
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
+      const response2 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/segment/status?processingId=${uniqueSegmentName}`)
       
-      // Poll for status
-      await checkSegmentStatus(uniqueSegmentName);
-      
-      setUploadStatus('Archivo subido y procesado exitosamente');
+      setUploadStatus('Archivo subido exitosamente');
       setCurrentStep(4); 
     } catch (error) {
       console.error('Error al subir el archivo:', error);
