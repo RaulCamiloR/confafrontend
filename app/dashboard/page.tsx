@@ -10,8 +10,8 @@ const DashboardPage = () => {
   const router = useRouter()
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 space-y-6 min-h-screen pb-30">
-      <div className="w-48 h-48 relative">
+    <div className="flex flex-col items-center justify-center p-8 space-y-4 min-h-screen pb-30">
+      <div className="w-48 h-48 relative mb-1">
         <Image 
           src="/images/confa-logo.png" 
           alt="Confa Logo" 
@@ -20,14 +20,12 @@ const DashboardPage = () => {
           className="object-contain"
         />
       </div>
-      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
-        Bienvenido a <span className="text-orange-500">Campañas</span>
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 text-center max-w-md">
+
+      <h2 className="text-gray-600 dark:text-gray-300 text-center max-w-md -mt-2">
         Crea tus campañas de forma sencilla y dinamica
-      </p>
+      </h2>
       
-      <div className="flex flex-col items-center space-y-3 mt-6">
+      <div className="flex flex-col items-center space-y-3 mt-4">
         <Link 
           href="/dashboard/plantillas" 
           className="flex items-center space-x-2 px-4 py-2 bg-white hover:bg-gray-50 rounded-lg border border-gray-200 transition shadow-sm w-48 justify-center"

@@ -7,6 +7,7 @@ import Modal from './Modal'
 import CampaignModal from './CampaignModal'
 import useUserStore from '@/stores/userStore';
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const Navbar = () => {
   const { toggle } = useSidebar()
@@ -40,7 +41,7 @@ const Navbar = () => {
     <>
       <nav className="bg-gray-800 border-b border-gray-700 h-14 flex-shrink-0 text-gray-200 shadow-md">
         <div className="h-full px-4 md:px-6 py-2 flex justify-between items-center">
-          {/* Left section with menu button and title */}
+          {/* Left section with menu button and icon */}
           <div className="flex items-center space-x-4">
             <button
               onClick={toggle}
@@ -48,9 +49,9 @@ const Navbar = () => {
             >
               <MdMenu size={24} />
             </button>
-            <h1 className="text-xl md:text-2xl font-semibold text-gray-100">
-            {`${user?.name ? user?.name : 'Cerrando sesión...'}`}
-            </h1>
+            <Link href="/dashboard" className="flex items-center space-x-2">
+              <MdCampaign size={28} className="text-orange-500" />
+            </Link>
           </div>
 
           {/* Action Buttons */}
