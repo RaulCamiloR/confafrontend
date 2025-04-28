@@ -14,6 +14,8 @@ export async function POST(request: Request) {
             channel
         }
 
+        // hi
+
         console.log({params})
 
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, params, { withCredentials: true })
