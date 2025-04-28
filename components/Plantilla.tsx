@@ -50,7 +50,8 @@ const Plantilla = () => {
  
           const {data} = await axios.post('/api/create-template', {
             templateName: templateName,
-            html: Buffer.from(html).toString('base64')
+            content: Buffer.from(html).toString('base64'),
+            channel: 'email'
           })
 
           console.log({data})

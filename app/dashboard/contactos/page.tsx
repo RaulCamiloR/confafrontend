@@ -31,14 +31,10 @@ const ContactosPage = () => {
       const data = await getSegmentos(channel, pageNum, pageSize, false) as any
       console.log('Datos recibidos:', data)
       
-      // Manejar los datos recibidos
       if (data) {
-        // Si la respuesta devuelve segmentos directamente o está dentro de una propiedad 'segments'
         const segmentsArray = Array.isArray(data) ? data : (data.segments || [])
         setSegments(segmentsArray)
         
-        // Determinar si hay más páginas disponibles
-        // Si recibimos menos elementos que el tamaño de página, asumimos que no hay más
         setHasNextPage(segmentsArray.length >= pageSize)
       }
     } catch (error) {
@@ -63,7 +59,6 @@ const ContactosPage = () => {
   const handlePrevPage = () => {
     if (page > 1) {
       setPage(prev => prev - 1)
-      // Al volver a la página anterior, asumimos que puede haber una siguiente
       setHasNextPage(true)
     }
   }
@@ -71,7 +66,7 @@ const ContactosPage = () => {
   const handleChannelChange = (channel: ChannelType) => {
     if (channel !== channelType) {
       setChannelType(channel)
-      setPage(1) // Reset a la primera página cuando cambia el filtro
+      setPage(1) 
     }
   }
 
@@ -79,9 +74,25 @@ const ContactosPage = () => {
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
       <div className="px-6 py-4 flex-shrink-0">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
-            Segmentos
-          </h1>
+          <div className="relative w-64">
+            <input
+              type="text"
+              placeholder="Buscar segmentos..."
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <svg
+              className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 dark:text-gray-500"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
           <div className="flex space-x-2">
             <button
               onClick={() => handleChannelChange('EMAIL')}

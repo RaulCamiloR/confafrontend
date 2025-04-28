@@ -6,7 +6,6 @@ export async function POST(request: Request) {
 
         const { templateName, html } = await request.json();
         
-        // Convertir HTML a base64
         const htmlBase64 = Buffer.from(html).toString('base64');
 
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, {
