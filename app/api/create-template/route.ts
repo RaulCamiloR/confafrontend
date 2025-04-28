@@ -4,14 +4,19 @@ export async function POST(request: Request) {
 
     try {
 
-        const { templateName, html } = await request.json();
+        const { templateName, content, channel } = await request.json();
         
-        const htmlBase64 = Buffer.from(html).toString('base64');
+        const htmlBase64 = Buffer.from(content).toString('base64');
+        
+        const params = {
+            templateName,
+            content: htmlBase64,
+            channel
+        }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, {
-            TemplateName: templateName,
-            html: htmlBase64
-        }, { withCredentials: true })
+        console.log({params})
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, params, { withCredentials: true })
 
         console.log({response})
 

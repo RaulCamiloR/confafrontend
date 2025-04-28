@@ -47,16 +47,19 @@ const Plantilla = () => {
         const { design, html } = data;
         
         try {
- 
-          const {data} = await axios.post('/api/create-template', {
-            templateName: templateName,
-            content: Buffer.from(html).toString('base64'),
+
+          const params = {
+            templateName,
+            content: html,
             channel: 'email'
-          })
+          }
+
+          console.log({params})
+ 
+          const {data} = await axios.post('/api/create-template', params)
 
           console.log({data})
           
-
           setNotification({ message: '¡Template guardado exitosamente!', type: 'success' });
           setTimeout(() => {
             window.location.href = '/dashboard';
