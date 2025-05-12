@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import { MdMenu, MdContacts, MdCampaign, MdExitToApp } from 'react-icons/md'
 import { useSidebar } from '../context/SidebarContext'
-import Modal from './Modal'
-import CampaignModal from './CampaignModal'
+import Modal from '@/app/dashboard/contactos/components/Modal'
+import CampaignModal from '@/app/dashboard/campanias/components/CampaignModal'
 import useUserStore from '@/stores/userStore';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'

@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useCampaign } from '../../context/CampaignContext'
-import TemplatesList from '../../TemplatesList'
-import { Template } from '../../context/TemplateContext'
+import { useCampaign } from '@/app/dashboard/campanias/contexts/CampaignContext'
+import TemplatesList from '@/app/dashboard/plantillas/components/TemplatesList'
+import { Template } from '@/app/dashboard/plantillas/contexts/TemplateContext'
 import { MdCheckCircle, MdEmail } from 'react-icons/md'
 import { FiMail, FiMessageSquare, FiPhone } from 'react-icons/fi'
 

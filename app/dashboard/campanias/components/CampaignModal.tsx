@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useCampaign } from '../context/CampaignContext'
+import { useCampaign } from '../contexts/CampaignContext'
 import StepOne from './CampaignSteps/StepOne'
 import StepTwo from './CampaignSteps/StepTwo'
 import StepThree from './CampaignSteps/StepThree'
@@ -61,10 +61,8 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
       case 1:
         return <StepOne onNext={nextStep} />
       case 2:
-        // No mostrar el paso 2 si el tipo es VOZ (por seguridad, aunque el useEffect debería manejarlo)
         return campaign.type === 'VOZ' ? null : <StepTwo onNext={nextStep} onPrev={prevStep} />
       case 3:
-        // No mostrar el paso 3 si el tipo es VOZ
         return campaign.type === 'VOZ' ? null : <StepThree onNext={nextStep} onPrev={prevStep} />
       case 4:
         return <StepFour onPrev={prevStep} onClose={handleClose} />

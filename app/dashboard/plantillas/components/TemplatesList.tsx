@@ -1,17 +1,19 @@
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { useTemplates, Template } from './context/TemplateContext';
+import { useTemplates, Template } from '../contexts/TemplateContext';
 import { MdEmail, MdDelete, MdEdit, MdContentCopy } from 'react-icons/md';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import SingleTemplate from './dashboardComponents/SingleTemplate';
+import SingleTemplate from './SingleTemplate';
+import { TemplateType } from '../constants/plantillas';
 
 interface TemplatesListProps {
   onSelect?: (template: Template | any) => void;
   selectable?: boolean;
+  type?: TemplateType;
 }
 
-const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = false }) => {
+const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = false, type }) => {
   const { templates, selectTemplate, selectedTemplate, deleteTemplate } = useTemplates();
   const [loadedTemplates, setLoadedTemplates] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,7 +41,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = fa
           html: template.html || '',
           createdAt: template.CreatedAt || new Date().toISOString(),
           isBackendTemplate: true,
-          // Mantener todos los datos originales
+          type: (template.Channel || 'email').toUpperCase() as TemplateType,
           originalData: template
         }));
         
@@ -69,7 +71,8 @@ const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = fa
         name: template.name,
         html: template.html || '',
         design: template.design || {},
-        createdAt: new Date(template.createdAt)
+        createdAt: new Date(template.createdAt),
+        type: template.type || 'EMAIL'
       };
       
       if (onSelect) {
@@ -84,8 +87,10 @@ const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = fa
     }
   };
 
-  // Combinar los templates de ambas fuentes para la paginación
-  const allTemplates = [...templates, ...loadedTemplates];
+  // Combinar los templates de ambas fuentes para la paginación y filtrar por tipo si es necesario
+  const allTemplates = [...templates, ...loadedTemplates].filter(template => 
+    !type || template.type === type || (template.originalData?.Channel || '').toUpperCase() === type
+  );
   
   // Calcular el total de páginas
   const totalPages = Math.ceil(allTemplates.length / templatesPerPage);
@@ -128,7 +133,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({ onSelect, selectable = fa
     return (
       <div className="text-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
         <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
-          No hay templates guardados
+          No hay templates {type ? `de ${type}` : ''} guardados
         </h3>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Crea y guarda templates para verlos aquí.

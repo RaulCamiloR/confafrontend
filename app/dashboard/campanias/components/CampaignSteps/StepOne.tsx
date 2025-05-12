@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useCampaign, CampaignType, CHANNEL_TYPES } from '../../context/CampaignContext'
+import { useCampaign, CampaignType, CHANNEL_TYPES } from '@/app/dashboard/campanias/contexts/CampaignContext'
 import { FiMail, FiMessageSquare, FiPhone } from 'react-icons/fi'
 
 interface StepOneProps {

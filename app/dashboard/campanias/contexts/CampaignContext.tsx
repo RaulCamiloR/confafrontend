@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState } from 'react'
-import { Template } from './TemplateContext'
+import { Template } from '@/app/dashboard/plantillas/contexts/TemplateContext'
 
 // Tipos para la campaña
 export interface Contact {

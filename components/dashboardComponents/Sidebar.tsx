@@ -7,19 +7,16 @@ import {
   MdDashboard, 
   MdCampaign, 
   MdContacts, 
-  MdInsertChart, 
-  MdSettings, 
   MdClose,
   MdEmail 
 } from 'react-icons/md'
 import { useSidebar } from '../context/SidebarContext'
 import LogoutButton from './LogoutButton'
+
 const menuItems = [
   { name: 'Dashboard', icon: MdDashboard, path: '/dashboard' },
   { name: 'Campañas', icon: MdCampaign, path: '/dashboard/campanias' },
   { name: 'Contactos', icon: MdContacts, path: '/dashboard/contactos' },
-  { name: 'Reportes', icon: MdInsertChart, path: '/dashboard/reportes' },
-  { name: 'Configuración', icon: MdSettings, path: '/dashboard/configuracion' },
   { name: 'Plantillas', icon: MdEmail, path: '/dashboard/plantillas' },
 ]
 

@@ -1,0 +1,75 @@
+.table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scroll-container {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* Estilos para la cabecera fija */
+thead {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 3;
+  border-bottom: 2px solid #0091E0;
+  box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Primera columna fija */
+.fixed-column {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 2;
+  min-width: 340px;
+}
+
+/* Scrollbars personalizados */
+.scroll-container::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #0091E0;
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: white;
+}
+
+/* Estilo de tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #0091E0;
+  text-align: left;
+}
+
+td:hover{
+  background: #e0f0ff;
+}
+
+th {
+  cursor: pointer;
+  transition: background 0.3scubic-bezier(1, -0.04, 0.03, 0.96);
+  min-width: 180px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  font-weight: bold;
+}

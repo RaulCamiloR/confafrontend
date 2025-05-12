@@ -5,7 +5,7 @@ import { FiUpload, FiCheck } from 'react-icons/fi'
 import { AiOutlineFileExcel } from 'react-icons/ai'
 import { BsCheckCircleFill } from 'react-icons/bs'
 import axios from 'axios'
-import { CHANNEL_TYPES } from '../context/CampaignContext'
+import { segmentConstants } from '../constants/segments'
 
 interface ModalProps {
   isOpen: boolean;
@@ -221,7 +221,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
                 onChange={(e) => setChannelType(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
-                {CHANNEL_TYPES.map((type) => (
+                {segmentConstants.channelTypes.map((type) => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </select>

@@ -6,21 +6,29 @@ export async function POST(request: Request) {
 
         const { templateName, content, channel } = await request.json();
         
-        const htmlBase64 = Buffer.from(content).toString('base64');
+        // Solo convertir a Base64 si es una plantilla de email
+        const contentToSend = channel.toLowerCase() === 'email' 
+            ? Buffer.from(content).toString('base64')
+            : content;
         
         const params = {
             templateName,
-            content: htmlBase64,
+            content: contentToSend,
             channel
         }
 
-        // hi
+        console.log('Parámetros para crear plantilla:', {
+            templateName,
+            channel,
+            contentLength: contentToSend.length
+        });
 
-        console.log({params})
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/templates`, params, { withCredentials: true })
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, params, { withCredentials: true })
-
-        console.log({response})
+        console.log('Respuesta del servidor al crear plantilla:', {
+            status: response.status,
+            data: response.data
+        });
 
         return NextResponse.json(response.data, { status: 200 });
         

@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useCampaign } from '../../context/CampaignContext'
+import { useCampaign } from '@/app/dashboard/campanias/contexts/CampaignContext'
 import { MdCheckCircle } from 'react-icons/md'
 import { FiPhone, FiGlobe, FiMail, FiMessageSquare, FiUsers } from 'react-icons/fi'
 

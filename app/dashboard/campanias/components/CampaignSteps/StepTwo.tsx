@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useCampaign, Segment } from '../../context/CampaignContext'
+import { useCampaign, Segment } from '@/app/dashboard/campanias/contexts/CampaignContext'
 import { getSegmentos } from '@/functions/segmentos'
 
 interface StepTwoProps {

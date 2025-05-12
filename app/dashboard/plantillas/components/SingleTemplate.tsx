@@ -1,6 +1,5 @@
 import React from 'react';
 import { MdEmail, MdDelete, MdEdit, MdContentCopy } from 'react-icons/md';
-import { Template } from '../context/TemplateContext';
 
 interface SingleTemplateProps {
   template: any;

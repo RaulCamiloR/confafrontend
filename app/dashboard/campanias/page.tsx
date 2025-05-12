@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { CampaniaCard } from '@/components/campanias/CampaniaCard'
+import { CampaniaCard } from './components/CampaniaCard'
 
 interface Campaign {
   id: string;

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { TemplateProvider } from "@/components/context/TemplateContext";
-import { CampaignProvider } from "@/components/context/CampaignContext";
+import { TemplateProvider } from "@/app/dashboard/plantillas/contexts/TemplateContext";
+import { CampaignProvider } from "@/app/dashboard/campanias/contexts/CampaignContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -3,13 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
-        // Obtener templates del backend
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/email/templates`, { withCredentials: true });
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/templates`, { withCredentials: true });
         
-        // Mostrar en consola para depuración
         console.log('Templates recibidos del backend:', response.data);
         
-        // Verificar la estructura de la respuesta para asegurar que estamos enviando los datos correctos
         let templates: any[] = [];
         
         if (response.data.templates) {

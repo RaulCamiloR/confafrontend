@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState } from 'react'
 import axios from 'axios'
+import { TemplateType } from '../constants/plantillas'
 
 // Definir el tipo para un template
 export interface Template {
@@ -11,6 +12,7 @@ export interface Template {
   design: any; // El JSON del diseño de Unlayer
   createdAt: Date;
   isBackendTemplate?: boolean; // Propiedad opcional para indicar si el template viene del backend
+  type?: TemplateType; // Tipo de plantilla (EMAIL o SMS)
 }
 
 interface TemplateContextType {

@@ -1,74 +1,22 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { getSegmentos } from '@/functions/segmentos'
-import { Segmentos } from '@/components/segmentos/Segmentos'
-
-interface Segment {
-  segmentId: string;
-  segmentName: string;
-  status: string;
-  channelType: string;
-  recordsProcessed: number;
-  startedAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-type ChannelType = 'EMAIL' | 'VOZ' | 'SMS';
+import React from 'react'
+import { Segmentos } from './components/Segmentos'
+import { useSegments } from './hooks/useSegments'
+import { segmentConstants } from './constants/segments'
+import { ChannelType } from './constants/segments'
 
 const ContactosPage = () => {
-  const [segments, setSegments] = useState<Segment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [hasNextPage, setHasNextPage] = useState(true)
-  const [channelType, setChannelType] = useState<ChannelType>('EMAIL')
-  const pageSize = 9
-  
-  const fetchSegments = async (pageNum: number, channel: ChannelType) => {
-    setLoading(true)
-    try {
-      const data = await getSegmentos(channel, pageNum, pageSize, false) as any
-      console.log('Datos recibidos:', data)
-      
-      if (data) {
-        const segmentsArray = Array.isArray(data) ? data : (data.segments || [])
-        setSegments(segmentsArray)
-        
-        setHasNextPage(segmentsArray.length >= pageSize)
-      }
-    } catch (error) {
-      console.error('Error al cargar segmentos:', error)
-      setSegments([])
-      setHasNextPage(false)
-    } finally {
-      setLoading(false)
-    }
-  }
-  
-  useEffect(() => {
-    fetchSegments(page, channelType)
-  }, [page, channelType])
-  
-  const handleNextPage = () => {
-    if (segments.length > 0 && hasNextPage) {
-      setPage(prev => prev + 1)
-    }
-  }
-  
-  const handlePrevPage = () => {
-    if (page > 1) {
-      setPage(prev => prev - 1)
-      setHasNextPage(true)
-    }
-  }
-
-  const handleChannelChange = (channel: ChannelType) => {
-    if (channel !== channelType) {
-      setChannelType(channel)
-      setPage(1) 
-    }
-  }
+  const {
+    segments,
+    loading,
+    page,
+    hasNextPage,
+    channelType,
+    handleNextPage,
+    handlePrevPage,
+    handleChannelChange
+  } = useSegments()
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
@@ -94,36 +42,19 @@ const ContactosPage = () => {
             </svg>
           </div>
           <div className="flex space-x-2">
-            <button
-              onClick={() => handleChannelChange('EMAIL')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                channelType === 'EMAIL'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              EMAIL
-            </button>
-            <button
-              onClick={() => handleChannelChange('VOZ')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                channelType === 'VOZ'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              VOZ
-            </button>
-            <button
-              onClick={() => handleChannelChange('SMS')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                channelType === 'SMS'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              SMS
-            </button>
+            {segmentConstants.channelTypes.map(channel => (
+              <button
+                key={channel}
+                onClick={() => handleChannelChange(channel as ChannelType)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  channelType === channel
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                {channel}
+              </button>
+            ))}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import AgendaDinamica from '@/components/agenda/AgendaDinamica';
+import AgendaDinamica from '@/app/agenda/components/AgendaDinamica';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
