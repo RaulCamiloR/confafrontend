@@ -164,7 +164,9 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
   return (
     <div className="flex flex-col h-full">
       <div className="flex-grow pb-4">
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`${selectable ? "flex" : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"} gap-4`}
+        >
           {currentTemplates.map((template, index) => {
             // Determinar si es un template del backend
             const isBackendTemplate =

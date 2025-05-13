@@ -53,7 +53,7 @@ const SingleTemplate: React.FC<SingleTemplateProps> = ({
         isSelected
           ? "border-orange-500"
           : "border-gray-200 dark:border-gray-700"
-      } hover:shadow-md transition-shadow ${selectable ? "cursor-pointer" : ""}`}
+      } hover:shadow-md transition-shadow ${selectable ? "cursor-pointer" : ""} min-w-80`}
       onClick={handleSelect}
     >
       <div className="p-3">
