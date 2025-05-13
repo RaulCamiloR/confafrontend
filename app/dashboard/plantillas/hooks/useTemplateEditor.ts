@@ -53,8 +53,7 @@ export const useTemplateEditor = () => {
         const params = {
           templateName,
           content: html,
-          channel: 'email',
-          type: 'EMAIL'
+          channel: 'EMAIL',
         }
 
         console.log({params})

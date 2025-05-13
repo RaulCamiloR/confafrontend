@@ -1,5 +1,11 @@
 import React from "react";
-import { MdEmail, MdDelete, MdEdit, MdContentCopy } from "react-icons/md";
+import {
+  MdEmail,
+  MdDelete,
+  MdEdit,
+  MdContentCopy,
+  MdSms,
+} from "react-icons/md";
 
 interface SingleTemplateProps {
   template: any;
@@ -53,10 +59,18 @@ const SingleTemplate: React.FC<SingleTemplateProps> = ({
       <div className="p-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
-            <MdEmail
-              className={`${isBackend ? "text-blue-500" : "text-orange-500"} mr-2`}
-              size={18}
-            />
+            {template.type === "SMS" && (
+              <MdSms
+                className={`${isBackend ? "text-blue-500" : "text-orange-500"} mr-2`}
+                size={18}
+              />
+            )}
+            {template.type === "EMAIL" && (
+              <MdEmail
+                className={`${isBackend ? "text-blue-500" : "text-orange-500"} mr-2`}
+                size={18}
+              />
+            )}
             <h3 className="font-medium text-gray-900 dark:text-white truncate text-sm">
               {templateName}
             </h3>
@@ -108,7 +122,7 @@ const SingleTemplate: React.FC<SingleTemplateProps> = ({
         </p>
       </div>
       <div className="bg-white rounded-b-lg dark:border-white border">
-        <iframe srcDoc={template?.html} className="max-w-full"></iframe>
+        <iframe srcDoc={template?.html} className="w-full"></iframe>
       </div>
     </div>
   );

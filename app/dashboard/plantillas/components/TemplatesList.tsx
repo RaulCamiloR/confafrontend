@@ -39,7 +39,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
         const { data } = await axios.get("/api/get-templates");
 
         // Mostrar los templates en la consola
-        console.log("Templates obtenidos del backend:", data);
+        // console.log("Templates obtenidos del backend:", data);
 
         // Formatear los templates del backend para que tengan una estructura similar a los locales
         const formattedTemplates = (data || []).map((template: any) => ({
@@ -48,10 +48,10 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
             template.id ||
             `backend-${Date.now()}-${Math.random()}`,
           name: template.TemplateName || template.name || "Template sin nombre",
-          html: atob(template.content) || "",
+          html: atob(template?.content ?? template?.message) || "",
           createdAt: template.CreatedAt || new Date().toISOString(),
           isBackendTemplate: true,
-          type: (template.Channel || "email").toUpperCase() as TemplateType,
+          type: (template.channel || "email").toUpperCase() as TemplateType,
           originalData: template,
         }));
 
@@ -67,7 +67,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
     fetchTemplates();
 
     // Mostrar los templates en contexto al montar el componente
-    console.log("Templates en contexto:", templates);
+    // console.log("Templates en contexto:", templates);
   }, []);
 
   const handleSelect = (template: Template | any) => {
@@ -229,4 +229,3 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
 };
 
 export default TemplatesList;
-
