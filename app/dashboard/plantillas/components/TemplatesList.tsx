@@ -1,9 +1,7 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useTemplates, Template } from "../contexts/TemplateContext";
-import { MdEmail, MdDelete, MdEdit, MdContentCopy } from "react-icons/md";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import SingleTemplate from "./SingleTemplate";
 import { TemplateType } from "../constants/plantillas";
 
@@ -166,7 +164,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex-grow pb-4">
         <div
-          className={`${selectable ? "flex" : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"} gap-4`}
+          className={`${selectable ? "flex flex-col justify-center w-full" : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"} gap-4`}
         >
           {currentTemplates.map((template, index) => {
             // Determinar si es un template del backend
