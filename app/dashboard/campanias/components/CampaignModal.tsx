@@ -17,11 +17,11 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1)
   const { campaign, resetCampaign } = useCampaign()
   
-  const totalSteps = campaign.type === 'VOZ' ? 3 : 4
+  const totalSteps = campaign.type === 'VOICE' ? 3 : 4
 
-  // Efecto para saltar al paso 4 si el tipo es VOZ y estamos en el paso 3
+  // Efecto para saltar al paso 4 si el tipo es VOICE y estamos en el paso 3
   useEffect(() => {
-    if (currentStep === 3 && campaign.type === 'VOZ') {
+    if (currentStep === 3 && campaign.type === 'VOICE') {
       setCurrentStep(4)
     }
   }, [currentStep, campaign.type])
@@ -36,8 +36,8 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      // Si estamos en el paso 2 y el tipo es VOZ, ir directamente al paso 4
-      if (currentStep === 2 && campaign.type === 'VOZ') {
+      // Si estamos en el paso 2 y el tipo es VOICE, ir directamente al paso 4
+      if (currentStep === 2 && campaign.type === 'VOICE') {
         setCurrentStep(4)
       } else {
         setCurrentStep(currentStep + 1)
@@ -47,8 +47,8 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const prevStep = () => {
     if (currentStep > 1) {
-      // Si estamos en el paso 4 y el tipo es VOZ, volver al paso 2
-      if (currentStep === 4 && campaign.type === 'VOZ') {
+      // Si estamos en el paso 4 y el tipo es VOICE, volver al paso 2
+      if (currentStep === 4 && campaign.type === 'VOICE') {
         setCurrentStep(2)
       } else {
         setCurrentStep(currentStep - 1)
@@ -63,7 +63,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
       case 2:
         return <StepTwo onNext={nextStep} onPrev={prevStep} />
       case 3:
-        return campaign.type === 'VOZ' ? null : <StepThree onNext={nextStep} onPrev={prevStep} />
+        return campaign.type === 'VOICE' ? null : <StepThree onNext={nextStep} onPrev={prevStep} />
       case 4:
         return <StepFour onPrev={prevStep} onClose={handleClose} />
       default:
@@ -82,21 +82,21 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
           ? 'Elegir Plantilla de Email' 
           : campaign.type === 'SMS'
             ? 'Elegir Plantilla de SMS'
-            : 'Elegir Plantilla de Voz'
+            : 'Elegir Plantilla de Voice'
       case 4:
         return campaign.type === 'EMAIL'
           ? 'Revisar y Enviar Campaña de Email'
           : campaign.type === 'SMS'
             ? 'Revisar y Enviar Campaña de SMS'
-            : 'Revisar y Enviar Campaña de Voz'
+            : 'Revisar y Enviar Campaña de Voice'
       default:
         return 'Nueva Campaña'
     }
   }
 
   const calculateProgress = () => {
-    if (campaign.type === 'VOZ') {
-      // Para VOZ tenemos 3 pasos: 1, 2 y 4
+    if (campaign.type === 'VOICE') {
+      // Para VOICE tenemos 3 pasos: 1, 2 y 4
       switch (currentStep) {
         case 1:
           return 33; // 33% en el primer paso

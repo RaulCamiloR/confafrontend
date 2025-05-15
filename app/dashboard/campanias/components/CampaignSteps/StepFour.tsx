@@ -81,8 +81,8 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
 
     console.log(
       "Información de la plantilla:",
-      campaign.type === "VOZ"
-        ? "No aplica - Campaña de VOZ"
+      campaign.type === "VOICE"
+        ? "No aplica - Campaña de VOICE"
         : {
             nombre: campaign.template?.name || "Sin plantilla",
             creada: campaign.template?.createdAt || "N/A",
@@ -147,7 +147,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </span>
               ) : (
                 <span className="inline-flex items-center">
-                  <FiPhone className="mr-1" /> VOZ
+                  <FiPhone className="mr-1" /> VOICE
                 </span>
               )}
             </p>
@@ -182,27 +182,29 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           )}
         </div>
 
-        <div>
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Plantilla Seleccionada
-          </h4>
-          {campaign.template ? (
-            <div className="space-y-1 text-sm">
-              <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Nombre:</span>{" "}
-                {campaign.template.name}
+        {campaign.type !== "VOICE" && (
+          <div>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Plantilla Seleccionada
+            </h4>
+            {campaign.template ? (
+              <div className="space-y-1 text-sm">
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Nombre:</span>{" "}
+                  {campaign.template.name}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Creada:</span>{" "}
+                  {new Date(campaign.template.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-red-500">
+                No se ha seleccionado ninguna plantilla
               </p>
-              <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Creada:</span>{" "}
-                {new Date(campaign.template.createdAt).toLocaleDateString()}
-              </p>
-            </div>
-          ) : (
-            <p className="text-sm text-red-500">
-              No se ha seleccionado ninguna plantilla
-            </p>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex justify-between pt-4">

@@ -24,7 +24,7 @@ export interface Segment {
   updatedAt?: string;
 }
 
-export type CampaignType = 'EMAIL' | 'SMS' | 'VOZ';
+export type CampaignType = 'EMAIL' | 'SMS' | 'VOICE';
 
 export interface Campaign {
   name: string;
@@ -42,7 +42,7 @@ interface CampaignContextType {
 }
 
 // Lista de canales disponibles
-export const CHANNEL_TYPES: CampaignType[] = ['EMAIL', 'SMS', 'VOZ'];
+export const CHANNEL_TYPES: CampaignType[] = ['EMAIL', 'SMS', 'VOICE'];
 
 // Estado inicial
 const initialCampaign: Campaign = {

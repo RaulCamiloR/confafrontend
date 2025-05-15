@@ -47,7 +47,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
         return <FiMail className="mr-1" />;
       case 'SMS':
         return <FiMessageSquare className="mr-1" />;
-      case 'VOZ':
+      case 'VOICE':
         return <FiPhone className="mr-1" />;
       default:
         return null;

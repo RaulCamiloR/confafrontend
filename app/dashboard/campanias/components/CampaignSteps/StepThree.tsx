@@ -39,7 +39,7 @@ const StepThree: React.FC<StepThreeProps> = ({ onNext, onPrev }) => {
         return <FiMail className="mr-2" size={18} />;
       case "SMS":
         return <FiMessageSquare className="mr-2" size={18} />;
-      case "VOZ":
+      case "VOICE":
         return <FiPhone className="mr-2" size={18} />;
       default:
         return <FiMail className="mr-2" size={18} />;
@@ -138,7 +138,7 @@ const StepThree: React.FC<StepThreeProps> = ({ onNext, onPrev }) => {
           )}
         </div>
         <div className="h-[250px] overflow-y-auto p-3">
-          {campaign.type !== "VOZ" && (
+          {campaign.type !== "VOICE" && (
             <TemplatesList
               onSelect={handleTemplateSelect}
               selectable={true}

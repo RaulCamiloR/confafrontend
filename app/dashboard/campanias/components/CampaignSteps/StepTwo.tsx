@@ -29,8 +29,8 @@ const StepTwo: React.FC<StepTwoProps> = ({ onNext, onPrev }) => {
       setIsLoading(true);
       setLoadError("");
 
-      // Convertir VOZ a VOICE para la llamada al backend
-      const channelType = campaign.type === "VOZ" ? "VOICE" : campaign.type;
+      // Ya no necesitamos convertir VOZ a VOICE
+      const channelType = campaign.type;
 
       console.log(
         `Fetching segments: type=${channelType}, page=${pageNum}, pageSize=${pageSize}, forDropdown=false`,
