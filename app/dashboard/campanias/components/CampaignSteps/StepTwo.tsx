@@ -25,12 +25,15 @@ const StepTwo: React.FC<StepTwoProps> = ({ onNext, onPrev }) => {
       setIsLoading(true)
       setLoadError('')
       
-      console.log(`Fetching segments: type=${campaign.type}, page=${pageNum}, pageSize=${pageSize}, forDropdown=false`)
+      // Convertir VOZ a VOICE para la llamada al backend
+      const channelType = campaign.type === 'VOZ' ? 'VOICE' : campaign.type
+      
+      console.log(`Fetching segments: type=${channelType}, page=${pageNum}, pageSize=${pageSize}, forDropdown=false`)
       // Usamos forDropdown=false como en la página de contactos
-      const data = await getSegmentos(campaign.type, pageNum, pageSize, false) as any
+      const data = await getSegmentos(channelType, pageNum, pageSize, false) as any
       console.log('API response:', data)
       
-      // Verificar que data existe
+      // Verificar que data existel
       if (!data) {
         console.warn('La API devolvió una respuesta vacía')
         setSegments([])
