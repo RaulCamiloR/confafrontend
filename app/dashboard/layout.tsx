@@ -12,11 +12,11 @@ export default async function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="h-screen w-full flex flex-col overflow-hidden bg-gray-100">
+      <div className="h-full w-full flex flex-col overflow-hidden bg-gray-100">
         <Sidebar />
         <div className="md:pl-64 flex flex-col flex-1 h-full overflow-hidden">
           <Navbar />
-          <main className="">{children}</main>
+          <main className="h-full pb-14">{children}</main>
         </div>
       </div>
     </SidebarProvider>

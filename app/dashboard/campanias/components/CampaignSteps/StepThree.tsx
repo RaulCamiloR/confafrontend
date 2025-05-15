@@ -151,7 +151,7 @@ const StepThree: React.FC<StepThreeProps> = ({ onNext, onPrev }) => {
       <div className="flex justify-between pt-4">
         <button
           onClick={onPrev}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition"
+          className="px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-700 dark:hover:bg-red-600 text-white dark:text-white rounded-lg transition"
         >
           Anterior
         </button>

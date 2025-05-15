@@ -34,7 +34,7 @@ const CampaniasPage = () => {
     const loadCampaigns = async () => {
       setLoading(true)
       try {
-      const { data } = await axios("/api/campaigns");
+      const { data } = await axios.get("/api/campaigns");
         setAllCampaigns(data.campaigns || [])
       } catch (error) {
         console.error('Error cargando campañas:', error)

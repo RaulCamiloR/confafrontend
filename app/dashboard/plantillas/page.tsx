@@ -19,7 +19,7 @@ const PlantillasPage = () => {
   }
 
   return (
-    <div className="p-6 h-full overflow-auto">
+    <div className="p-6 h-full overflow-y-scroll">
       {/* Estado 1: Lista de plantillas */}
       {!showEditor && !showTemplateSelection && (
         <>
