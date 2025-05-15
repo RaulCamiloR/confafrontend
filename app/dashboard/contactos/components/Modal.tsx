@@ -255,12 +255,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
                 <span className="font-semibold">Haz clic para subir</span> o arrastra y suelta
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Solo archivos CSV (MAX. 10MB)
+                Solo archivos CSV, XLSX (MAX. 10MB)
               </p>
               <input
                 type="file"
                 className="hidden"
-                accept=".csv"
+                accept=".csv,.xlsx"
                 onChange={handleFileChange}
                 id="fileUpload"
               />
