@@ -50,7 +50,7 @@ const SMSTemplate = () => {
       const params = {
         templateName,
         content: smsContent,
-        channel: 'sms'
+        channel: 'SMS'
       };
 
       const { data } = await axios.post('/api/create-template', params);

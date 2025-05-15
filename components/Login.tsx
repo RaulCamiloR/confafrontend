@@ -8,7 +8,7 @@ import useUserStore from '@/stores/userStore';
 
 const LoginComponent = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("gastonisnardi");
+  const [username, setUsername] = useState("gaston.isnardi@cloudhesive.com");
   const [password, setPassword] = useState("Be482e1fd2@");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ const LoginComponent = () => {
         password: password
       });
 
-      setUser(response.data.user.data[0]);
+      setUser(response.data.user);
       
       setIsRedirecting(true);
       

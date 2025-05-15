@@ -1,30 +1,114 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+// import { NextResponse } from "next/server";
+// import type { NextRequest } from "next/server";
+//
+// export function middleware(request: NextRequest) {
+//
+//   /*
+//   const accessToken = request.cookies.get('AccessToken');
+//
+//   // Rutas públicas que no requieren autenticación
+//   const publicPaths = ['/auth'];
+//   const isPublicPath = publicPaths.some(path =>
+//     request.nextUrl.pathname.startsWith(path)
+//   );
+//
+//
+//   if (!accessToken && !isPublicPath) {
+//     return NextResponse.redirect(new URL('/auth', request.url));
+//   }
+//
+//   if (accessToken && isPublicPath) {
+//     return NextResponse.redirect(new URL('/', request.url));
+//   }
+//   */
+//
+//   return NextResponse.next();
+// }
 
-export function middleware(request: NextRequest) {
-  
-  /*
-  const accessToken = request.cookies.get('AccessToken');
-  
-  // Rutas públicas que no requieren autenticación
-  const publicPaths = ['/auth'];
-  const isPublicPath = publicPaths.some(path => 
-    request.nextUrl.pathname.startsWith(path)
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { refresh_token } from "./app/api/refresh-token";
+
+export async function middleware(request: NextRequest) {
+  console.log("Llama a middleware");
+  if (
+    request.nextUrl.pathname.startsWith("/api/login") ||
+    request.nextUrl.pathname.startsWith("/api/logout")
+  ) {
+    console.log("retorna en login o logout");
+    return NextResponse.next();
+  }
+
+  const refreshToken = request.cookies.has("RefreshToken");
+  if (!refreshToken) {
+    console.log("Retorna por que no tiene refresh token (no esta loggeado)");
+    if (
+      !(
+        request.nextUrl.pathname.startsWith("/auth") ||
+        request.nextUrl.pathname.startsWith("/api")
+      )
+    ) {
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  console.log(
+    "Revisa si necesita refrescar tokens y hace la peticion original",
   );
 
-  
-  if (!accessToken && !isPublicPath) {
-    return NextResponse.redirect(new URL('/auth', request.url));
-  }
-  
-  if (accessToken && isPublicPath) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-  */
-  
-  return NextResponse.next();
-}
+  // Clone the request headers and set a new header `x-hello-from-middleware1`
+  const requestHeaders = new Headers(request.headers);
 
+  const cookiesObj = {};
+  let cookie = requestHeaders.get("cookie") ?? "";
+  let setCookie = false;
+
+  let idToken = request.cookies.has("IdToken");
+  let idTokenVal = "";
+  if (!idToken) {
+    console.log("Refrescando tokens");
+
+    cookie = await refresh_token(request.headers.get("cookie") ?? "");
+    console.log(cookie);
+
+    if (cookie !== "") {
+      setCookie = true;
+
+      // Parse cookies manually
+      if (cookie) {
+        cookie.split(";").forEach((c) => {
+          const [name, value] = c.trim().split("=");
+          cookiesObj[name] = value;
+        });
+      }
+
+      idTokenVal = cookiesObj?.IdToken;
+    }
+  } else {
+    idTokenVal = request.cookies.get("IdToken")?.value ?? "";
+  }
+
+  if (idTokenVal && request.nextUrl.pathname.startsWith("/api")) {
+    requestHeaders.set("Authorization", `Bearer ${idTokenVal}`);
+  }
+
+  requestHeaders.set("cookie", cookie);
+
+  // You can also set request headers in NextResponse.next
+  const response = NextResponse.next({
+    request: {
+      // New request headers
+      headers: requestHeaders,
+    },
+  });
+
+  if (setCookie) {
+    response.headers.set("set-cookie", cookie);
+  }
+
+  return response;
+}
 
 export const config = {
   matcher: [
@@ -37,6 +121,7 @@ export const config = {
     '/otros',
     */
     // Excluir archivos estáticos y API
-    '/((?!api|_next/static|_next/image|favicon.ico|images).*)',
+    "/((?!_next/static|_next/image|favicon.ico|images).*)",
   ],
-}; 
+};
+
