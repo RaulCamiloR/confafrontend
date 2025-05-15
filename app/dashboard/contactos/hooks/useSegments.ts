@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { getSegmentos } from '@/functions/segmentos'
 import { segmentConstants } from '../constants/segments'
 import { ChannelType } from '../constants/segments'
+import axios from 'axios'
 
 
 interface Segment {
@@ -28,7 +28,14 @@ export const useSegments = () => {
   const fetchSegments = async (pageNum: number, channel: ChannelType) => {
     setLoading(true)
     try {
-      const data = await getSegmentos(channel, pageNum, pageSize, false) as any
+      const { data } = await axios("/api/segmentos", {
+        params: {
+          channelType: channel,
+          page: pageNum,
+          pageSize,
+          forDropdown: false,
+        },
+      });
       
       if (data) {
         const segmentsArray = Array.isArray(data) ? data : (data.segments || [])

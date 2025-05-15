@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { CampaniaCard } from './components/CampaniaCard'
+import axios from 'axios';
 
 interface Campaign {
   id: string;
@@ -33,7 +34,7 @@ const CampaniasPage = () => {
     const loadCampaigns = async () => {
       setLoading(true)
       try {
-        const data = await getCampanias()
+      const { data } = await axios("/api/campaigns");
         setAllCampaigns(data.campaigns || [])
       } catch (error) {
         console.error('Error cargando campañas:', error)

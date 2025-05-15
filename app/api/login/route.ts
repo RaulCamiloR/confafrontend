@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     );
 
     if (response.status >= 400) {
-      let json_data = { message: "Error al iniciar sesion" };
+      let json_data = { message: "Error no especificado" };
       if (response.headers.get("content-type") === "application/json") {
         json_data = await response.json();
       }

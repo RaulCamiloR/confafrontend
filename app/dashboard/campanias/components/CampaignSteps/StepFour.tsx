@@ -1,10 +1,16 @@
-'use client'
+"use client";
 
-import axios from 'axios'
-import React, { useState } from 'react'
-import { useCampaign } from '@/app/dashboard/campanias/contexts/CampaignContext'
-import { MdCheckCircle } from 'react-icons/md'
-import { FiPhone, FiGlobe, FiMail, FiMessageSquare, FiUsers } from 'react-icons/fi'
+import axios from "axios";
+import React, { useState } from "react";
+import { useCampaign } from "@/app/dashboard/campanias/contexts/CampaignContext";
+import { MdCheckCircle } from "react-icons/md";
+import {
+  FiPhone,
+  FiGlobe,
+  FiMail,
+  FiMessageSquare,
+  FiUsers,
+} from "react-icons/fi";
 
 interface StepFourProps {
   onPrev: () => void;
@@ -12,89 +18,93 @@ interface StepFourProps {
 }
 
 const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
-  const { campaign, resetCampaign } = useCampaign()
-  const [isSending, setIsSending] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  
+  const { campaign, resetCampaign } = useCampaign();
+  const [isSending, setIsSending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const getLanguageFlag = (lang: string) => {
-    const langCode = lang.split('_')[0];
-    switch(langCode) {
-      case 'en': return '🇺🇸';
-      case 'es': return '🇪🇸';
-      case 'pt': return '🇧🇷';
-      case 'fr': return '🇫🇷';
-      case 'de': return '🇩🇪';
-      default: return '🌐';
+    const langCode = lang.split("_")[0];
+    switch (langCode) {
+      case "en":
+        return "🇺🇸";
+      case "es":
+        return "🇪🇸";
+      case "pt":
+        return "🇧🇷";
+      case "fr":
+        return "🇫🇷";
+      case "de":
+        return "🇩🇪";
+      default:
+        return "🌐";
     }
-  }
-  
+  };
+
   const formatPhoneNumber = (phone: string) => {
-    return phone.replace(/(\+\d{1,3})(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4');
-  }
-  
+    return phone.replace(/(\+\d{1,3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
+  };
+
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-  }
-  
-  const handleSubmit = async() => {
-    setIsSending(true)
-    
+    const date = new Date(dateString);
+    return (
+      date.toLocaleDateString() +
+      " " +
+      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    );
+  };
+
+  const handleSubmit = async () => {
+    setIsSending(true);
+
     const newCampaign = {
       name: campaign.name,
-      type: campaign.type.toLowerCase(),
+      type: campaign.type,
       templateName: campaign.template?.name,
       segmentName: campaign.segment?.label,
-    }
+    };
 
     // Log detallado de la campaña antes de enviar
-    console.log('=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===');
-    console.log('Información básica:', {
+    console.log("=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===");
+    console.log("Información básica:", {
       nombre: campaign.name,
       tipo: campaign.type,
-      emailRemitente: campaign.email || 'N/A'
+      emailRemitente: campaign.email || "N/A",
     });
-    
-    console.log('Información del segmento:', {
-      nombre: campaign.segment?.label || 'Sin segmento',
-      id: campaign.segment?.value || 'N/A',
-      creado: campaign.segment?.createdAt || 'N/A',
-      estado: campaign.segment?.status || 'N/A',
-      registrosProcesados: campaign.segment?.recordsProcessed || 'N/A'
+
+    console.log("Información del segmento:", {
+      nombre: campaign.segment?.label || "Sin segmento",
+      id: campaign.segment?.value || "N/A",
+      creado: campaign.segment?.createdAt || "N/A",
+      estado: campaign.segment?.status || "N/A",
+      registrosProcesados: campaign.segment?.recordsProcessed || "N/A",
     });
-    
-    console.log('Información de la plantilla:', campaign.type === 'VOZ' ? 'No aplica - Campaña de VOZ' : {
-      nombre: campaign.template?.name || 'Sin plantilla',
-      creada: campaign.template?.createdAt || 'N/A',
-      esPlantillaBackend: campaign.template?.isBackendTemplate || false
-    });
-    
-    console.log('Objeto final a enviar:', newCampaign);
-    console.log('=====================================');
+
+    console.log(
+      "Información de la plantilla:",
+      campaign.type === "VOZ"
+        ? "No aplica - Campaña de VOZ"
+        : {
+            nombre: campaign.template?.name || "Sin plantilla",
+            creada: campaign.template?.createdAt || "N/A",
+            esPlantillaBackend: campaign.template?.isBackendTemplate || false,
+          },
+    );
+
+    console.log("Objeto final a enviar:", newCampaign);
+    console.log("=====================================");
 
     try {
+      const { data } = await axios.post("/api/campaigns", { ...newCampaign });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/campaign/create-campaign`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({...newCampaign}),
-        //credentials: 'include'
-      })
-
-      const data = await response.json()
-
-      console.log({data})
-      
+      console.log({ data });
+      setIsSuccess(true);
     } catch (error) {
-      console.log({error})
+      console.log({ error });
+      setIsSuccess(false);
     } finally {
-      setIsSending(false)
-      setIsSuccess(true)
+      setIsSending(false);
     }
-
-  }
+  };
 
   if (isSuccess) {
     return (
@@ -107,7 +117,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           Tu campaña se ha programado correctamente.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -115,7 +125,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Revisa la información de tu campaña antes de enviarla.
       </p>
-      
+
       <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-5 space-y-4">
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -126,12 +136,12 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
               <span className="font-medium">Nombre:</span> {campaign.name}
             </p>
             <p className="text-gray-600 dark:text-gray-400">
-              <span className="font-medium">Tipo de campaña:</span>{' '}
-              {campaign.type === 'EMAIL' ? (
+              <span className="font-medium">Tipo de campaña:</span>{" "}
+              {campaign.type === "EMAIL" ? (
                 <span className="inline-flex items-center">
                   <FiMail className="mr-1" /> EMAIL
                 </span>
-              ) : campaign.type === 'SMS' ? (
+              ) : campaign.type === "SMS" ? (
                 <span className="inline-flex items-center">
                   <FiMessageSquare className="mr-1" /> SMS
                 </span>
@@ -141,14 +151,15 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </span>
               )}
             </p>
-            {campaign.type === 'EMAIL' && (
+            {campaign.type === "EMAIL" && (
               <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Email de remitente:</span> {campaign.email}
+                <span className="font-medium">Email de remitente:</span>{" "}
+                {campaign.email}
               </p>
             )}
           </div>
         </div>
-        
+
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Segmento Seleccionado
@@ -165,10 +176,12 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-red-500">No se ha seleccionado ningún segmento</p>
+            <p className="text-sm text-red-500">
+              No se ha seleccionado ningún segmento
+            </p>
           )}
         </div>
-        
+
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Plantilla Seleccionada
@@ -176,18 +189,22 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           {campaign.template ? (
             <div className="space-y-1 text-sm">
               <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Nombre:</span> {campaign.template.name}
+                <span className="font-medium">Nombre:</span>{" "}
+                {campaign.template.name}
               </p>
               <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Creada:</span> {new Date(campaign.template.createdAt).toLocaleDateString()}
+                <span className="font-medium">Creada:</span>{" "}
+                {new Date(campaign.template.createdAt).toLocaleDateString()}
               </p>
             </div>
           ) : (
-            <p className="text-sm text-red-500">No se ha seleccionado ninguna plantilla</p>
+            <p className="text-sm text-red-500">
+              No se ha seleccionado ninguna plantilla
+            </p>
           )}
         </div>
       </div>
-      
+
       <div className="flex justify-between pt-4">
         <button
           onClick={onPrev}
@@ -203,19 +220,36 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
         >
           {isSending ? (
             <>
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Enviando...
             </>
           ) : (
-            'Enviar Campaña'
+            "Enviar Campaña"
           )}
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StepFour 
+export default StepFour;
+

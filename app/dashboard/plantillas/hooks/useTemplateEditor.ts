@@ -58,7 +58,7 @@ export const useTemplateEditor = () => {
 
         console.log({params})
 
-        const {data} = await axios.post('/api/create-template', params)
+        const {data} = await axios.post('/api/templates', params)
 
         console.log({data})
         
