@@ -53,7 +53,7 @@ const SMSTemplate = () => {
         channel: 'SMS'
       };
 
-      const { data } = await axios.post('/api/create-template', params);
+      const { data } = await axios.post('/api/templates', params);
       
       setNotification({
         message: '¡Plantilla SMS guardada exitosamente!',

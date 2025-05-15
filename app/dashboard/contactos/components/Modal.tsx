@@ -162,8 +162,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
       await new Promise(resolve => setTimeout(resolve, 5000));
 
-      const response2 = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/segment/status?processingId=${uniqueSegmentName}`)
-      
       setUploadStatus('Archivo subido exitosamente');
       setCurrentStep(4); 
     } catch (error) {
