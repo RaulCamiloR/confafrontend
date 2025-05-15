@@ -36,6 +36,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
     const fetchTemplates = async () => {
       try {
         setLoading(true);
+
         const { data } = await axios.get("/api/get-templates");
 
         // Mostrar los templates en la consola

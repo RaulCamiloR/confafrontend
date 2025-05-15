@@ -19,7 +19,12 @@ export async function POST(request: Request) {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/templates`,
       params,
-      { withCredentials: true },
+      {
+        headers: {
+          Cookie: request.headers.get("cookie"),
+          Authorization: request.headers.get("Authorization"),
+        },
+      },
     );
 
     console.log("Respuesta del servidor al crear plantilla:", {

@@ -1,12 +1,14 @@
-import React from 'react'
-import Navbar from '@/components/dashboardComponents/Navbar'
-import Sidebar from '@/components/dashboardComponents/Sidebar'
-import { SidebarProvider } from '@/components/context/SidebarContext'
+"use server";
 
-export default function DashboardLayout({
+import React from "react";
+import Navbar from "@/components/dashboardComponents/Navbar";
+import Sidebar from "@/components/dashboardComponents/Sidebar";
+import { SidebarProvider } from "@/components/context/SidebarContext";
+
+export default async function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <SidebarProvider>
@@ -14,11 +16,10 @@ export default function DashboardLayout({
         <Sidebar />
         <div className="md:pl-64 flex flex-col flex-1 h-full overflow-hidden">
           <Navbar />
-          <main className="">
-              {children}
-          </main>
+          <main className="">{children}</main>
         </div>
       </div>
     </SidebarProvider>
-  )
-} 
+  );
+}
+

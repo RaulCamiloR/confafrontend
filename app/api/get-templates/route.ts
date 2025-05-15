@@ -5,10 +5,15 @@ export async function GET(request: Request) {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/templates`,
-      { withCredentials: true },
+      {
+        headers: {
+          Cookie: request.headers.get("cookie"),
+          Authorization: request.headers.get("Authorization"),
+        },
+      },
     );
 
-    console.log("Templates recibidos del backend:", response.data);
+    // console.log("Templates recibidos del backend:", response.data);
 
     let templates: any[] = [];
 
