@@ -19,14 +19,14 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
       newErrors.name = 'El nombre de la campaña es obligatorio'
     }
     
-    // Solo validar email si el tipo de campaña es 'EMAIL'
-    if (campaign.type === 'EMAIL') {
-      if (!campaign.email.trim()) {
-        newErrors.email = 'El email es obligatorio'
-      } else if (!/^\S+@\S+\.\S+$/.test(campaign.email)) {
-        newErrors.email = 'Email inválido'
-      }
-    }
+    // // Solo validar email si el tipo de campaña es 'EMAIL'
+    // if (campaign.type === 'EMAIL') {
+    //   if (!campaign.email.trim()) {
+    //     newErrors.email = 'El email es obligatorio'
+    //   } else if (!/^\S+@\S+\.\S+$/.test(campaign.email)) {
+    //     newErrors.email = 'Email inválido'
+    //   }
+    // }
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -103,7 +103,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
         </div>
       </div>
       
-      {campaign.type === 'EMAIL' && (
+      {/*campaign.type === 'EMAIL' && (
         <div>
           <label htmlFor="campaign-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Email de Remitente
@@ -122,7 +122,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
             <p className="mt-1 text-sm text-red-500">{errors.email}</p>
           )}
         </div>
-      )}
+      )*/}
       
       <div className="flex justify-end pt-4">
         <button

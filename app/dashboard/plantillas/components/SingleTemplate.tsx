@@ -122,7 +122,7 @@ const SingleTemplate: React.FC<SingleTemplateProps> = ({
         </p>
       </div>
       <div className="bg-white rounded-b-lg dark:border-white border">
-        <iframe srcDoc={template?.html} className="w-full"></iframe>
+        <iframe srcDoc={template?.html} className="w-full h-80"></iframe>
       </div>
     </div>
   );

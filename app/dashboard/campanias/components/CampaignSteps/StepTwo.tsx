@@ -262,7 +262,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ onNext, onPrev }) => {
       <div className="flex justify-between pt-4">
         <button
           onClick={onPrev}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
         >
           Anterior
         </button>
