@@ -151,12 +151,12 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </span>
               )}
             </p>
-            {campaign.type === "EMAIL" && (
+            {/*campaign.type === "EMAIL" && (
               <p className="text-gray-600 dark:text-gray-400">
                 <span className="font-medium">Email de remitente:</span>{" "}
                 {campaign.email}
               </p>
-            )}
+            )*/}
           </div>
         </div>
 
@@ -211,7 +211,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
         <button
           onClick={onPrev}
           disabled={isSending}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Anterior
         </button>
