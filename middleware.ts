@@ -30,18 +30,15 @@ import type { NextRequest } from "next/server";
 import { refresh_token } from "./app/api/refresh-token";
 
 export async function middleware(request: NextRequest) {
-  console.log("Llama a middleware");
   if (
     request.nextUrl.pathname.startsWith("/api/login") ||
     request.nextUrl.pathname.startsWith("/api/logout")
   ) {
-    console.log("retorna en login o logout");
     return NextResponse.next();
   }
 
   const refreshToken = request.cookies.has("RefreshToken");
   if (!refreshToken) {
-    console.log("Retorna por que no tiene refresh token (no esta loggeado)");
     if (
       !(
         request.nextUrl.pathname.startsWith("/auth") ||
@@ -53,10 +50,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log(
-    "Revisa si necesita refrescar tokens y hace la peticion original",
-  );
-
   // Clone the request headers and set a new header `x-hello-from-middleware1`
   const requestHeaders = new Headers(request.headers);
 
@@ -64,17 +57,12 @@ export async function middleware(request: NextRequest) {
   let cookie = requestHeaders.get("cookie") ?? "";
   let setCookie = false;
 
-  let idToken = request.cookies.has("IdToken");
-  let idTokenVal = "";
-  if (!idToken) {
-    console.log("Refrescando tokens");
+  let idToken = "";
+  if (!request.cookies.has("IdToken")) {
 
     cookie = await refresh_token(request.headers.get("cookie") ?? "");
-    console.log(cookie);
 
     if (cookie !== "") {
-      setCookie = true;
-
       // Parse cookies manually
       if (cookie) {
         cookie.split(";").forEach((c) => {
@@ -83,14 +71,15 @@ export async function middleware(request: NextRequest) {
         });
       }
 
-      idTokenVal = cookiesObj?.IdToken;
+      setCookie = true;
+      idToken = cookiesObj?.IdToken;
     }
   } else {
-    idTokenVal = request.cookies.get("IdToken")?.value ?? "";
+    idToken = request.cookies.get("IdToken")?.value ?? "";
   }
 
-  if (idTokenVal && request.nextUrl.pathname.startsWith("/api")) {
-    requestHeaders.set("Authorization", `Bearer ${idTokenVal}`);
+  if (idToken && request.nextUrl.pathname.startsWith("/api")) {
+    requestHeaders.set("Authorization", `Bearer ${idToken}`);
   }
 
   requestHeaders.set("cookie", cookie);
@@ -124,4 +113,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|images).*)",
   ],
 };
-
