@@ -1,9 +1,15 @@
+import React from "react";
+import LoginComponent from "@/components/Login";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import React from 'react';
-import LoginComponent from '@/components/Login';
+const AuthPage = async () => {
+  if ((await cookies()).has("IdToken")) {
+    redirect("/");
+  }
 
-const AuthPage = () => {
   return <LoginComponent />;
 };
 
 export default AuthPage;
+
