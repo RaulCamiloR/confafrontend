@@ -53,13 +53,14 @@ export async function middleware(request: NextRequest) {
   // Clone the request headers and set a new header `x-hello-from-middleware1`
   const requestHeaders = new Headers(request.headers);
 
-  const cookiesObj = {};
+  const cookiesObj: { IdToken: string; [key: string]: string } = {
+    IdToken: "",
+  };
   let cookie = requestHeaders.get("cookie") ?? "";
   let setCookie = false;
 
   let idToken = "";
   if (!request.cookies.has("IdToken")) {
-
     cookie = await refresh_token(request.headers.get("cookie") ?? "");
 
     if (cookie !== "") {
