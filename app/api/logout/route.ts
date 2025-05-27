@@ -20,6 +20,11 @@ export async function POST(request: Request) {
       res.headers.set("set-cookie", setCookie);
     }
 
+    res.headers.append(
+      "set-cookie",
+      "user=; HttpOnly; Secure; Path=/; Max-Age=0",
+    );
+
     return res;
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
@@ -29,4 +34,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
