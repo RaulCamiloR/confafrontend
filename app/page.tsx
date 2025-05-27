@@ -26,15 +26,12 @@ const HomePage = async () => {
     redirect("/auth");
   }
 
-  const hasCampaignsAccess = await testPolicy(
-    [Actions.Read, Actions.Write],
-    campaignsPages,
-  );
+  const hasCampaignsAccess = await testPolicy(Actions.Read, campaignsPages);
   const hasAgendaDinamicaAccess = await testPolicy(
-    [Actions.Read, Actions.Write],
+    Actions.Read,
     agendaDinamicaPages,
   );
-  const hasReportsAccess = await testPolicy([Actions.Read], reportesPages);
+  const hasReportsAccess = await testPolicy(Actions.Read, reportesPages);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-800">

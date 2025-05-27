@@ -1,10 +1,29 @@
 import "server-only";
 
 import { getCurrentUser } from "./auth";
-import { Actions, Resources, creatPolitica } from "./utils";
+import { Actions, Resources, creatPermisosModulo } from "./utils";
 
-const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
-  "Campanias EMAIL Read": creatPolitica(
+//// NOTE: Modulos
+// NOTE: module names
+const CAMPAIGNS_EMAIL_READ = "Campanias EMAIL Read";
+const CAMPAIGNS_EMAIL_WRITE = "Campanias EMAIL Write";
+const CAMPAIGNS_SMS_READ = "Campanias SMS Read";
+const CAMPAIGNS_SMS_WRITE = "Campanias SMS Write";
+const CAMPAIGNS_VOICE_READ = "Campanias VOICE Read";
+const CAMPAIGNS_VOICE_WRITE = "Campanias VOICE Write";
+const CAMPAIGNS_WHATSAPP_READ = "Campanias WHATSAPP Read";
+const CAMPAIGNS_WHATSAPP_WRITE = "Campanias WHATSAPP Write";
+const AGENDA_DINAMICA_READ = "AGENDA_DINAMICA Read";
+const AGENDA_DINAMICA_WRITE = "AGENDA_DINAMICA Write";
+const REPORTES_READ = "REPORTES Read";
+const REPORTES_WRITE = "REPORTES Write";
+const ADMIN_READ = "ADMIN Read";
+const ADMIN_WRITE = "ADMIN Write";
+const CONTACTOS_READ = "CONTACTOS Read";
+const CONTACTOS_WRITE = "CONTACTOS Write";
+
+const policies: { [key: string]: ReturnType<typeof creatPermisosModulo> } = {
+  [CAMPAIGNS_EMAIL_READ]: creatPermisosModulo(
     [Actions.Read],
     [
       Resources.CampaignsEmailCampaign,
@@ -12,7 +31,7 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsEmailTemplate,
     ],
   ),
-  "Campanias EMAIL Write": creatPolitica(
+  [CAMPAIGNS_EMAIL_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [
       Resources.CampaignsEmailCampaign,
@@ -20,7 +39,7 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsEmailTemplate,
     ],
   ),
-  "Campanias SMS Read": creatPolitica(
+  [CAMPAIGNS_SMS_READ]: creatPermisosModulo(
     [Actions.Read],
     [
       Resources.CampaignsSmsCampaign,
@@ -28,7 +47,7 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsSmsTemplate,
     ],
   ),
-  "Campanias SMS Write": creatPolitica(
+  [CAMPAIGNS_SMS_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [
       Resources.CampaignsSmsCampaign,
@@ -36,15 +55,15 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsSmsTemplate,
     ],
   ),
-  "Campanias VOZ Read": creatPolitica(
+  [CAMPAIGNS_VOICE_READ]: creatPermisosModulo(
     [Actions.Read],
     [Resources.CampaignsVoiceCampaign, Resources.CampaignsVoiceSegment],
   ),
-  "Campanias VOZ Write": creatPolitica(
+  [CAMPAIGNS_VOICE_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [Resources.CampaignsVoiceCampaign, Resources.CampaignsVoiceSegment],
   ),
-  "Campanias Whatsapp Read": creatPolitica(
+  [CAMPAIGNS_WHATSAPP_READ]: creatPermisosModulo(
     [Actions.Read],
     [
       Resources.CampaignsWhatsappCampaign,
@@ -52,7 +71,7 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsWhatsappTemplate,
     ],
   ),
-  "Campanias Whatsapp Write": creatPolitica(
+  [CAMPAIGNS_WHATSAPP_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [
       Resources.CampaignsWhatsappCampaign,
@@ -60,33 +79,36 @@ const policies: { [key: string]: ReturnType<typeof creatPolitica> } = {
       Resources.CampaignsWhatsappTemplate,
     ],
   ),
-  "Agenda Dinamica Read": creatPolitica(
+  [AGENDA_DINAMICA_READ]: creatPermisosModulo(
     [Actions.Read],
     [Resources.AgendaDinamica],
   ),
-  "Agenda Dinamica Write": creatPolitica(
+  [AGENDA_DINAMICA_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [Resources.AgendaDinamica],
   ),
-  "Reportes Read": creatPolitica([Actions.Read], [Resources.Reportes]),
-  "Reportes Write": creatPolitica([Actions.Read, Actions.Write], [Resources.Reportes]),
-  "Admin Read": creatPolitica(
+  [REPORTES_READ]: creatPermisosModulo([Actions.Read], [Resources.Reportes]),
+  [REPORTES_WRITE]: creatPermisosModulo(
+    [Actions.Read, Actions.Write],
+    [Resources.Reportes],
+  ),
+  [ADMIN_READ]: creatPermisosModulo(
     [Actions.Read],
     [Resources.AdminUsuarios, Resources.AdminRoles, Resources.AdminArea],
   ),
-  "Admin Write": creatPolitica(
+  [ADMIN_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [Resources.AdminUsuarios, Resources.AdminRoles, Resources.AdminArea],
   ),
-  "Contactos Read": creatPolitica([Actions.Read], [Resources.Contactos]),
-  "Contactos Write": creatPolitica(
+  [CONTACTOS_READ]: creatPermisosModulo([Actions.Read], [Resources.Contactos]),
+  [CONTACTOS_WRITE]: creatPermisosModulo(
     [Actions.Read, Actions.Write],
     [Resources.Contactos],
   ),
 };
 
 export const testPolicy = async (
-  actions: Array<Actions>,
+  action: Actions,
   resources: Array<Resources>,
 ) => {
   const user = await getCurrentUser();
@@ -94,22 +116,22 @@ export const testPolicy = async (
     return false;
   }
   user.modules = [
-    "Campanias EMAIL Read",
-    // "Campanias EMAIL Write ",
-    // "Campanias Voz Read",
-    // "Campanias Voz Write",
-    // "Campanias SMS Read",
-    // "Campanias SMS Write",
-    // "Campanias Whatsapp Read",
-    // "Campanias Whatsapp Write",
-    "Agenda Dinamica Read",
-    "Agenda Dinamica Write",
-    "Reportes Read",
-    "Reportes Write",
-    "Admin Read",
-    "Admin Write",
-    "Contactos Read",
-    "Contactos Write",
+    // CAMPAIGNS_EMAIL_READ,
+    CAMPAIGNS_EMAIL_WRITE,
+    CAMPAIGNS_SMS_READ,
+    // CAMPAIGNS_SMS_WRITE,
+    CAMPAIGNS_VOICE_READ,
+    // CAMPAIGNS_VOICE_WRITE,
+    // CAMPAIGNS_WHATSAPP_READ,
+    // CAMPAIGNS_WHATSAPP_WRITE,
+    AGENDA_DINAMICA_READ,
+    AGENDA_DINAMICA_WRITE,
+    REPORTES_READ,
+    REPORTES_WRITE,
+    ADMIN_READ,
+    ADMIN_WRITE,
+    CONTACTOS_READ,
+    CONTACTOS_WRITE,
   ];
 
   const keys = Object.keys(policies);
@@ -123,5 +145,5 @@ export const testPolicy = async (
   // }
   return user.modules
     .filter((mod) => keys.includes(mod))
-    .some((mod) => policies[mod](actions, resources));
+    .some((mod) => policies[mod](action, resources));
 };

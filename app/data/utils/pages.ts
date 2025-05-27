@@ -9,9 +9,9 @@ export const campaignsPages = [
   Resources.CampaignsSmsTemplate,
   Resources.CampaignsVoiceCampaign,
   Resources.CampaignsVoiceSegment,
-  Resources.CampaignsWhatsappCampaign,
-  Resources.CampaignsWhatsappSegment,
-  Resources.CampaignsWhatsappTemplate,
+  // Resources.CampaignsWhatsappCampaign,
+  // Resources.CampaignsWhatsappSegment,
+  // Resources.CampaignsWhatsappTemplate,
 ];
 
 export const agendaDinamicaPages = [Resources.AgendaDinamica];
