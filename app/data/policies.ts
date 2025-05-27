@@ -5,6 +5,7 @@ import { Actions, Resources, creatPermisosModulo } from "./utils";
 
 //// NOTE: Modulos
 // NOTE: module names
+// TODO: Pendiente cambiar nombres que se hayan seleccionado desde el backend
 const CAMPAIGNS_EMAIL_READ = "Campanias EMAIL Read";
 const CAMPAIGNS_EMAIL_WRITE = "Campanias EMAIL Write";
 const CAMPAIGNS_SMS_READ = "Campanias SMS Read";
@@ -115,15 +116,17 @@ export const testPolicy = async (
   if (!user) {
     return false;
   }
+
+  // TODO: Pendiente eliminar cuando el backend envie los modulos
   user.modules = [
-    // CAMPAIGNS_EMAIL_READ,
+    CAMPAIGNS_EMAIL_READ,
     CAMPAIGNS_EMAIL_WRITE,
     CAMPAIGNS_SMS_READ,
-    // CAMPAIGNS_SMS_WRITE,
+    CAMPAIGNS_SMS_WRITE,
     CAMPAIGNS_VOICE_READ,
-    // CAMPAIGNS_VOICE_WRITE,
-    // CAMPAIGNS_WHATSAPP_READ,
-    // CAMPAIGNS_WHATSAPP_WRITE,
+    CAMPAIGNS_VOICE_WRITE,
+    CAMPAIGNS_WHATSAPP_READ,
+    CAMPAIGNS_WHATSAPP_WRITE,
     AGENDA_DINAMICA_READ,
     AGENDA_DINAMICA_WRITE,
     REPORTES_READ,
@@ -135,14 +138,14 @@ export const testPolicy = async (
   ];
 
   const keys = Object.keys(policies);
-  // NOTE: Return false if any module exists
-  if (user.modules.every((mod) => !keys.includes(mod))) {
-    return false;
-  }
-  // // NOTE: Return false if at least one module don't exists
-  // if (user.modules.some((mod) => !keys.includes(mod))) {
+  // // NOTE: Return false if any module exists
+  // if (user.modules.every((mod) => !keys.includes(mod))) {
   //   return false;
   // }
+  // NOTE: Return false if at least one module don't exists
+  if (user.modules.some((mod) => !keys.includes(mod))) {
+    return false;
+  }
   return user.modules
     .filter((mod) => keys.includes(mod))
     .some((mod) => policies[mod](action, resources));

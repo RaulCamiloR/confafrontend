@@ -18,7 +18,7 @@ const HomeFeature = ({
 }) => {
   return (
     <Link href={href} className="block">
-      <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 w-64 hover:shadow-xl transition-shadow duration-300 border border-gray-200 dark:border-gray-600">
+      <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 w-64 hover:shadow-xl transition-shadow duration-300 border border-gray-200 dark:border-gray-600 min-h-48">
         <div className="flex items-center justify-center mb-4">
           <Icon className={`${iconColor} text-5xl`} />
         </div>

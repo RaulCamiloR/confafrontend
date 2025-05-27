@@ -38,9 +38,11 @@ const PlantillasPage = ({
         <>
           <div className="flex justify-between items-center mb-6">
             <button
-              disabled={!hasEmailPermission && !hasSmsPermission}
+              disabled={
+                !(hasEmailPermissionWriteOnly || hasSmsPermissionWriteOnly)
+              }
               onClick={() => setShowTemplateSelection(true)}
-              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors cursor-pointer disabled:cursor-auto disabled:opacity-30 disabled:hover:bg-orange-500"
+              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-orange-500"
             >
               Crear Nueva Plantilla
             </button>
@@ -58,7 +60,7 @@ const PlantillasPage = ({
                         : false
                   }
                   onClick={() => setTemplateType(type as TemplateType)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-auto disabled:opacity-30 ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
                     templateType === type
                       ? "bg-orange-500 text-white"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
