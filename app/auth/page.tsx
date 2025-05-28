@@ -1,5 +1,5 @@
 import React from "react";
-import LoginComponent from "@/components/Login";
+import LoginComponent from "@/app/auth/components/Login";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
