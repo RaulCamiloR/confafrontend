@@ -1,6 +1,6 @@
 "use client";
 
-import HomeFeature from "@/components/HomeFeature";
+import HomeFeature from "./HomeFeature";
 import {
   MdOutlineCampaign,
   MdLogout,
