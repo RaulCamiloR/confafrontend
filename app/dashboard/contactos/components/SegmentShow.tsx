@@ -54,28 +54,29 @@ const ContactosPage = ({
             </svg>
           </div>
           <div className="flex space-x-2">
-            {segmentConstants.channelTypes.map((channel) => (
-              <button
-                key={channel}
-                disabled={
-                  channel === "EMAIL"
-                    ? !hasEmailPermission
-                    : channel === "SMS"
-                      ? !hasSmsPermission
-                      : channel === "VOICE"
-                        ? !hasVoicePermission
-                        : false
-                }
-                onClick={() => handleChannelChange(channel as ChannelType)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
-                  channelType === channel
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-              >
-                {channel}
-              </button>
-            ))}
+            {segmentConstants.channelTypes
+              .filter((channel) =>
+                channel === "EMAIL"
+                  ? hasEmailPermission
+                  : channel === "SMS"
+                    ? hasSmsPermission
+                    : channel === "VOICE"
+                      ? hasVoicePermission
+                      : false,
+              )
+              .map((channel) => (
+                <button
+                  key={channel}
+                  onClick={() => handleChannelChange(channel as ChannelType)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    channelType === channel
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  }`}
+                >
+                  {channel}
+                </button>
+              ))}
           </div>
         </div>
       </div>

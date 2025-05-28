@@ -102,39 +102,42 @@ const CampaniasPage = ({
             Campañas
           </h1>
           <div className="flex space-x-2">
-            <button
-              disabled={!hasEmailPermission}
-              onClick={() => handleTypeChange("email")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
-                selectedType === "email"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              EMAIL
-            </button>
-            <button
-              disabled={!hasSmsPermission}
-              onClick={() => handleTypeChange("sms")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
-                selectedType === "sms"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              SMS
-            </button>
-            <button
-              disabled={!hasVoicePermission}
-              onClick={() => handleTypeChange("voice")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
-                selectedType === "voice"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              VOICE
-            </button>
+            {hasEmailPermission && (
+              <button
+                onClick={() => handleTypeChange("email")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  selectedType === "email"
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                }`}
+              >
+                EMAIL
+              </button>
+            )}
+            {hasSmsPermission && (
+              <button
+                onClick={() => handleTypeChange("sms")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  selectedType === "sms"
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                }`}
+              >
+                SMS
+              </button>
+            )}
+            {hasVoicePermission && (
+              <button
+                onClick={() => handleTypeChange("voice")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  selectedType === "voice"
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                }`}
+              >
+                VOICE
+              </button>
+            )}
           </div>
         </div>
       </div>

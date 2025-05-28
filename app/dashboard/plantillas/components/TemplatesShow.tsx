@@ -49,26 +49,27 @@ const PlantillasPage = ({
 
             {/* Selector de tipo de plantilla */}
             <div className="flex space-x-2">
-              {templateConstants.templateTypes.map((type) => (
-                <button
-                  key={type}
-                  disabled={
-                    type === "EMAIL"
-                      ? !hasEmailPermission
-                      : type === "SMS"
-                        ? !hasSmsPermission
-                        : false
-                  }
-                  onClick={() => setTemplateType(type as TemplateType)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 ${
-                    templateType === type
-                      ? "bg-orange-500 text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
+              {templateConstants.templateTypes
+                .filter((type) =>
+                  type === "EMAIL"
+                    ? hasEmailPermission
+                    : type === "SMS"
+                      ? hasSmsPermission
+                      : false,
+                )
+                .map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setTemplateType(type as TemplateType)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      templateType === type
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
             </div>
           </div>
 
