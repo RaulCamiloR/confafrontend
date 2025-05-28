@@ -4,6 +4,9 @@ import React, { createContext, useContext, useState } from 'react'
 import axios from 'axios'
 import { TemplateType } from '../constants/plantillas'
 
+// This extracts the type from the loadDesign method itself
+export type JSONTemplate = Parameters<typeof unlayer.loadDesign>[0];
+
 // Definir el tipo para un template
 export interface Template {
   id: string;
@@ -11,6 +14,7 @@ export interface Template {
   html: string;
   design: any; // El JSON del diseño de Unlayer
   createdAt: Date;
+  jsonTemplate?: JSONTemplate;
   isBackendTemplate?: boolean; // Propiedad opcional para indicar si el template viene del backend
   type?: TemplateType; // Tipo de plantilla (EMAIL o SMS)
 }
