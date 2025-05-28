@@ -1,41 +1,54 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { MdMenu, MdContacts, MdCampaign, MdExitToApp } from 'react-icons/md'
-import { useSidebar } from '../context/SidebarContext'
-import Modal from '@/app/dashboard/contactos/components/Modal'
-import CampaignModal from '@/app/dashboard/campanias/components/CampaignModal'
-import useUserStore from '@/stores/userStore';
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import React, { useState } from "react";
+import { MdMenu, MdContacts, MdCampaign, MdExitToApp } from "react-icons/md";
+import { useSidebar } from "../context/SidebarContext";
+import Modal from "@/app/dashboard/contactos/components/Modal";
+import CampaignModal from "@/app/dashboard/campanias/components/CampaignModal";
+import useUserStore from "@/stores/userStore";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useSegmentPermissions } from "@/app/dashboard/contactos/contexts/SegmentPermissionsContext";
+import { useCampaignPermissions } from "@/app/dashboard/campanias/contexts/CampaignPermissionsContext";
 
 const Navbar = () => {
-  const { toggle } = useSidebar()
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
-  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false)
-  const router = useRouter()
+  const {
+    hasEmailPermission: hasEmailPermissionSegment,
+    hasSmsPermission: hasSmsPermissionSegment,
+    hasVoicePermission: hasVoicePermissionSegment,
+  } = useSegmentPermissions();
+  const {
+    hasEmailPermission: hasEmailPermissionCampaign,
+    hasSmsPermission: hasSmsPermissionCampaign,
+    hasVoicePermission: hasVoicePermissionCampaign,
+  } = useCampaignPermissions();
+
+  const { toggle } = useSidebar();
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+  const router = useRouter();
 
   const user = useUserStore((state) => state.user);
 
   const handleNewContact = () => {
-    setIsContactModalOpen(true)
-  } 
+    setIsContactModalOpen(true);
+  };
 
   const handleNewCampaign = () => {
-    setIsCampaignModalOpen(true)
-  }
+    setIsCampaignModalOpen(true);
+  };
 
   const closeContactModal = () => {
-    setIsContactModalOpen(false)
-  }
+    setIsContactModalOpen(false);
+  };
 
   const closeCampaignModal = () => {
-    setIsCampaignModalOpen(false)
-  }
+    setIsCampaignModalOpen(false);
+  };
 
   const handleExit = () => {
-    router.push('/')
-  }
+    router.push("/");
+  };
 
   return (
     <>
@@ -57,15 +70,29 @@ const Navbar = () => {
           {/* Action Buttons */}
           <div className="flex items-center space-x-2 md:space-x-3">
             <button
-              className="px-3 md:px-4 py-1 text-white bg-orange-500 hover:bg-orange-600 rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+              disabled={
+                !(
+                  hasEmailPermissionSegment ||
+                  hasSmsPermissionSegment ||
+                  hasVoicePermissionSegment
+                )
+              }
+              className="px-3 md:px-4 py-1 text-white bg-orange-500 hover:bg-orange-600 rounded-lg flex items-center space-x-2 transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-orange-500"
               onClick={handleNewContact}
             >
               <MdContacts className="w-4 h-4" />
               <span className="hidden md:inline">Nuevos Contactos</span>
             </button>
-            
+
             <button
-              className="px-3 md:px-4 py-1 text-white bg-[#0091E0] hover:bg-white hover:text-[#0091E0] rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+              disabled={
+                !(
+                  hasEmailPermissionCampaign ||
+                  hasSmsPermissionCampaign ||
+                  hasVoicePermissionCampaign
+                )
+              }
+              className="px-3 md:px-4 py-1 text-white bg-[#0091E0] hover:bg-white hover:text-[#0091E0] rounded-lg flex items-center space-x-2 transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-[#0091E0] disabled:hover:text-white"
               onClick={handleNewCampaign}
             >
               <MdCampaign className="w-4 h-4" />
@@ -85,9 +112,9 @@ const Navbar = () => {
       </nav>
 
       {/* Modales */}
-      <Modal 
-        isOpen={isContactModalOpen} 
-        onClose={closeContactModal} 
+      <Modal
+        isOpen={isContactModalOpen}
+        onClose={closeContactModal}
         title="Nuevos Contactos"
       />
 
@@ -96,7 +123,8 @@ const Navbar = () => {
         onClose={closeCampaignModal}
       />
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
+

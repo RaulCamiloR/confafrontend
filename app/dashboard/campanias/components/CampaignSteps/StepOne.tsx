@@ -1,24 +1,32 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { useCampaign, CampaignType, CHANNEL_TYPES } from '@/app/dashboard/campanias/contexts/CampaignContext'
-import { FiMail, FiMessageSquare, FiPhone } from 'react-icons/fi'
+import React, { useState } from "react";
+import {
+  useCampaign,
+  CampaignType,
+  CHANNEL_TYPES,
+} from "@/app/dashboard/campanias/contexts/CampaignContext";
+import { FiMail, FiMessageSquare, FiPhone } from "react-icons/fi";
+import { useCampaignPermissions } from "@/app/dashboard/campanias/contexts/CampaignPermissionsContext";
 
 interface StepOneProps {
   onNext: () => void;
 }
 
 const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
-  const { campaign, updateCampaign } = useCampaign()
-  const [errors, setErrors] = useState<{name?: string, email?: string}>({})
+  const { hasEmailPermission, hasSmsPermission, hasVoicePermission } =
+    useCampaignPermissions();
+
+  const { campaign, updateCampaign } = useCampaign();
+  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
 
   const handleNext = () => {
-    const newErrors: {name?: string, email?: string} = {}
-    
+    const newErrors: { name?: string; email?: string } = {};
+
     if (!campaign.name.trim()) {
-      newErrors.name = 'El nombre de la campaña es obligatorio'
+      newErrors.name = "El nombre de la campaña es obligatorio";
     }
-    
+
     // // Solo validar email si el tipo de campaña es 'EMAIL'
     // if (campaign.type === 'EMAIL') {
     //   if (!campaign.email.trim()) {
@@ -27,27 +35,27 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
     //     newErrors.email = 'Email inválido'
     //   }
     // }
-    
+
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
-    
-    onNext()
-  }
+
+    onNext();
+  };
 
   const handleTypeChange = (type: CampaignType) => {
-    updateCampaign({ type })
-  }
+    updateCampaign({ type });
+  };
 
   // Función para obtener el icono según el tipo de campaña
   const getTypeIcon = (type: CampaignType) => {
-    switch(type) {
-      case 'EMAIL':
+    switch (type) {
+      case "EMAIL":
         return <FiMail className="mr-1" />;
-      case 'SMS':
+      case "SMS":
         return <FiMessageSquare className="mr-1" />;
-      case 'VOICE':
+      case "VOICE":
         return <FiPhone className="mr-1" />;
       default:
         return null;
@@ -59,9 +67,12 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Ingresa la información básica de tu campaña.
       </p>
-      
+
       <div>
-        <label htmlFor="campaign-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label
+          htmlFor="campaign-name"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
           Nombre de Campaña
         </label>
         <input
@@ -70,7 +81,9 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
           value={campaign.name}
           onChange={(e) => updateCampaign({ name: e.target.value })}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-            errors.name ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
+            errors.name
+              ? "border-red-500 dark:border-red-500"
+              : "border-gray-300 dark:border-gray-600"
           }`}
           placeholder="Ej: Campaña de Navidad 2023"
         />
@@ -78,13 +91,18 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
           <p className="mt-1 text-sm text-red-500">{errors.name}</p>
         )}
       </div>
-      
+
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Tipo de Campaña
         </label>
         <div className="flex space-x-4 flex-wrap">
-          {CHANNEL_TYPES.map((type) => (
+          {CHANNEL_TYPES.filter(
+            (type) =>
+              (type === "EMAIL" && hasEmailPermission) ||
+              (type === "SMS" && hasSmsPermission) ||
+              (type === "VOICE" && hasVoicePermission),
+          ).map((type) => (
             <div className="flex items-center mb-2 mr-4" key={type}>
               <input
                 type="radio"
@@ -95,14 +113,17 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
                 onChange={() => handleTypeChange(type)}
                 className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300"
               />
-              <label htmlFor={`type-${type.toLowerCase()}`} className="ml-2 flex items-center text-sm text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor={`type-${type.toLowerCase()}`}
+                className="ml-2 flex items-center text-sm text-gray-700 dark:text-gray-300"
+              >
                 {getTypeIcon(type)} {type}
               </label>
             </div>
           ))}
         </div>
       </div>
-      
+
       {/*campaign.type === 'EMAIL' && (
         <div>
           <label htmlFor="campaign-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -123,7 +144,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
           )}
         </div>
       )*/}
-      
+
       <div className="flex justify-end pt-4">
         <button
           onClick={handleNext}
@@ -133,7 +154,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StepOne 
+export default StepOne;

@@ -48,6 +48,17 @@ export async function POST(request: Request) {
       res.headers.set("set-cookie", setCookie);
     }
 
+    if (user) {
+      const frontUser = structuredClone(user);
+      delete frontUser.updatedAt;
+      delete frontUser.userId;
+      delete frontUser.createdAt;
+      res.headers.append(
+        "set-cookie",
+        `user=${btoa(JSON.stringify(frontUser))}; HttpOnly; Secure; Path=/; Max-Age=604800`,
+      );
+    }
+
     return res;
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
