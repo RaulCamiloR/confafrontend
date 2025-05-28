@@ -78,7 +78,7 @@ const HomePage = async () => {
             />
           )}
 
-          // Validacion de rol de Admin
+           {/* Validacion de rol de Admin */}
             <HomeFeature
               title="Admin"
               description="Solo los administradores"
