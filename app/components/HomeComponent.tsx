@@ -6,6 +6,7 @@ import {
   MdLogout,
   MdOutlineCalendarMonth,
   MdOutlineAssessment,
+  MdOutlineAdminPanelSettings,
 } from "react-icons/md";
 import { IconType } from "react-icons";
 import useUserStore from "@/stores/userStore";
@@ -40,6 +41,13 @@ const homeFeatures: HomeFeature[] = [
     icon: MdOutlineAssessment,
     iconColor: "text-blue-500",
     href: "/reportes",
+  },
+  {
+    title: "Admin",
+    description: "Only Admin",
+    icon: MdOutlineAdminPanelSettings,
+    iconColor: "text-purple-600",
+    href: "/admin",
   },
 ];
 
