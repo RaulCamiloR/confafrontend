@@ -5,6 +5,7 @@ import Plantilla from "@/app/dashboard/plantillas/components/Plantilla";
 import TemplatesList from "@/app/dashboard/plantillas/components/TemplatesList";
 import { TemplateType, templateConstants } from "../constants/plantillas";
 import SMSTemplate from "../components/SMSTemplate";
+import { Template } from "../contexts/TemplateContext";
 
 const PlantillasPage = ({
   hasEmailPermission,
@@ -25,6 +26,7 @@ const PlantillasPage = ({
   const [editorType, setEditorType] = useState<TemplateType>(
     hasEmailPermission ? "EMAIL" : hasSmsPermission ? "SMS" : "EMAIL",
   );
+  const [templateToEdit, setTemplateToEdit] = useState<Template | undefined>();
 
   const handleBackToList = () => {
     setShowEditor(false);
@@ -76,7 +78,15 @@ const PlantillasPage = ({
           <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
             Plantillas de {templateType} Guardadas
           </h2>
-          <TemplatesList type={templateType} />
+          <TemplatesList
+            type={templateType}
+            onSelect={(template) => {
+              setShowEditor(true);
+              setTemplateToEdit(template);
+            }}
+            selectable
+            grid
+          />
         </>
       )}
 
@@ -182,7 +192,11 @@ const PlantillasPage = ({
             </span>
           </div>
 
-          {editorType === "EMAIL" ? <Plantilla /> : <SMSTemplate />}
+          {editorType === "EMAIL" ? (
+            <Plantilla templateToEdit={templateToEdit} />
+          ) : (
+            <SMSTemplate />
+          )}
         </div>
       )}
     </div>
