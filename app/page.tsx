@@ -9,6 +9,7 @@ import {
   MdOutlineCampaign,
   MdOutlineCalendarMonth,
   MdOutlineAssessment,
+  MdOutlineAdminPanelSettings,
 } from "react-icons/md";
 import LogoutBtn from "./components/LogoutBtn";
 import { testPolicy } from "./data/policies";
@@ -76,6 +77,15 @@ const HomePage = async () => {
               href="/reportes"
             />
           )}
+
+          // Validacion de rol de Admin
+            <HomeFeature
+              title="Admin"
+              description="Solo los administradores"
+              icon={MdOutlineAdminPanelSettings}
+              iconColor="text-purple-800"
+              href="/admin"
+            />
         </div>
       </div>
     </div>
