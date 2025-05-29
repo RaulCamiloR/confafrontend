@@ -1,38 +1,89 @@
 "use client"
 
-import React, { useState } from "react";
-import { MdPerson, MdEmail, MdBusiness, MdSecurity, MdAdd, MdEdit, MdDelete } from 'react-icons/md';
+import React, { useState, useEffect } from "react";
+import { MdPerson, MdAdd } from 'react-icons/md';
 import ModalUsuario from './components/ModalUsuario';
+import CreateModal from './components/CreateModal';
+import Usuario from './components/Usuario';
 
-// Datos de ejemplo de usuarios
-const usuarios = [
-  {
-    id: 1,
-    nombre: "Milo",
-    email: "camilo.rodriguez@cloudhesive.com",
-    area: "Desarrollo",
-    rol: "Desarrollador"
-  }
-];
-
-const getRolColor = (rol: string) => {
-  switch (rol) {
-    case "Desarrollador":
-      return "bg-blue-100 text-blue-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+interface Usuario {
+  id: number;
+  nombre: string;
+  email: string;
+  area: string;
+  rol: string;
+}
 
 export default function UsuariosPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  // useEffect para llamar a la API al montar el componente
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        
+        const response = await fetch('/api/get-users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        const data = await response.json();
+        
+        console.log('✅ Respuesta:', data);
+
+        if (data.ok && data.users) {
+ 
+          const usuariosMapeados: Usuario[] = data.users.map((user: any, index: number) => ({
+            id: index + 1,
+            nombre: `${user.name} ${user.lastName}`,
+            email: user.email,
+            area: user.areaName || "No especificada", 
+            rol: user.role?.name || "Usuario"
+          }));
+          
+          setUsuarios(usuariosMapeados);
+          console.log('👥 Usuarios mapeados:', usuariosMapeados);
+        } else {
+          console.warn('⚠️ No se encontraron usuarios en la respuesta');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error al llamar a /api/get-users:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const handleEditUser = (usuario: Usuario) => {
+    console.log('🔧 Editando usuario:', usuario);
+    setSelectedUser(usuario);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedUser(null);
   };
 
   return (
@@ -44,7 +95,7 @@ export default function UsuariosPage() {
           <p className="text-gray-600 mt-2">Administra los usuarios del sistema</p>
         </div>
         <button 
-          onClick={handleOpenModal}
+          onClick={handleOpenCreateModal}
           className="flex items-center space-x-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
         >
           <MdAdd className="text-xl" />
@@ -52,61 +103,49 @@ export default function UsuariosPage() {
         </button>
       </div>
 
+      {/* Loading */}
+      {loading && (
+        <div className="flex justify-center items-center py-12">
+          <div className="text-gray-600">Cargando usuarios...</div>
+        </div>
+      )}
+
       {/* Grid de usuarios */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {usuarios.map((usuario) => (
-          <div
-            key={usuario.id}
-            className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200"
-          >
-            {/* Header de la tarjeta */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                  <MdPerson className="text-2xl text-gray-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{usuario.nombre}</h3>
-                  <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getRolColor(usuario.rol)}`}>
-                    {usuario.rol}
-                  </span>
-                </div>
-              </div>
+      {!loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {usuarios.length > 0 ? (
+            usuarios.map((usuario) => (
+              <Usuario
+                key={usuario.id}
+                id={usuario.id}
+                nombre={usuario.nombre}
+                email={usuario.email}
+                area={usuario.area}
+                rol={usuario.rol}
+                onEdit={handleEditUser}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <MdPerson className="text-6xl text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">No se encontraron usuarios</p>
             </div>
+          )}
+        </div>
+      )}
 
-            {/* Información del usuario */}
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <MdEmail className="text-lg text-gray-400" />
-                <span>{usuario.email}</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <MdBusiness className="text-lg text-gray-400" />
-                <span>{usuario.area}</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <MdSecurity className="text-lg text-gray-400" />
-                <span>Rol: {usuario.rol}</span>
-              </div>
-            </div>
+      {/* Modal para crear nuevo usuario */}
+      <CreateModal 
+        isOpen={isCreateModalOpen} 
+        onClose={handleCloseCreateModal} 
+      />
 
-            {/* Acciones */}
-            <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-100">
-              <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                <MdEdit className="text-lg" />
-              </button>
-              <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                <MdDelete className="text-lg" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal */}
+      {/* Modal para editar usuario */}
       <ModalUsuario 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
+        isOpen={isEditModalOpen} 
+        onClose={handleCloseEditModal}
+        usuarioData={selectedUser}
+        isEditMode={true}
       />
     </div>
   );
