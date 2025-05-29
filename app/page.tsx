@@ -18,6 +18,7 @@ import {
   campaignsPages,
   reportesPages,
   agendaDinamicaPages,
+  adminPages,
 } from "./data/utils";
 
 const HomePage = async () => {
@@ -33,6 +34,7 @@ const HomePage = async () => {
     agendaDinamicaPages,
   );
   const hasReportsAccess = await testPolicy(Actions.Read, reportesPages);
+  const hasAdminAccess = await testPolicy(Actions.Read, adminPages);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-800">
@@ -79,6 +81,7 @@ const HomePage = async () => {
           )}
 
           {/* Validacion de rol de Admin */}
+          {hasAdminAccess && (
             <HomeFeature
               title="Admin"
               description="Solo los administradores"
@@ -86,6 +89,7 @@ const HomePage = async () => {
               iconColor="text-purple-800"
               href="/admin"
             />
+          )}
         </div>
       </div>
     </div>

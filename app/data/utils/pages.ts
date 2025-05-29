@@ -17,3 +17,5 @@ export const campaignsPages = [
 export const agendaDinamicaPages = [Resources.AgendaDinamica];
 
 export const reportesPages = [Resources.Reportes];
+
+export const adminPages = [Resources.AdminUsuarios, Resources.AdminRoles, Resources.AdminArea];
