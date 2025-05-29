@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/templates`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/templates-get`,
       {
         headers: {
           Cookie: request.headers.get("cookie"),
@@ -48,18 +48,19 @@ export async function POST(request: Request) {
     const params = {
       templateName,
       content: btoa(content),
-      jsonTemplate,
+      design: jsonTemplate,
       channel,
     };
 
     console.log("Parámetros para crear plantilla:", {
       templateName,
       channel,
+      design: jsonTemplate,
       contentLength: params.content.length,
     });
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/templates`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/templates-create`,
       params,
       {
         headers: {
@@ -122,25 +123,25 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const { templateId, templateName, jsonTemplate, content, channel } = await request.json();
+    const { templateName, jsonTemplate, content, channel } =
+      await request.json();
 
     const params = {
-      templateId,
       templateName,
       content: btoa(content),
-      jsonTemplate,
+      design: jsonTemplate,
       channel,
     };
 
     console.log("Parámetros para editar plantilla:", {
-      templateId,
       templateName,
       channel,
+      design: jsonTemplate,
       contentLength: params.content.length,
     });
 
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/templates`,
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/templates-update`,
       params,
       {
         headers: {

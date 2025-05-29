@@ -12,9 +12,8 @@ export interface Template {
   id: string;
   name: string;
   html: string;
-  design: any; // El JSON del diseño de Unlayer
+  design?: any; // El JSON del diseño de Unlayer
   createdAt: Date;
-  jsonTemplate?: JSONTemplate;
   isBackendTemplate?: boolean; // Propiedad opcional para indicar si el template viene del backend
   type?: TemplateType; // Tipo de plantilla (EMAIL o SMS)
 }

@@ -44,9 +44,10 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
 
         // Formatear los templates del backend para que tengan una estructura similar a los locales
         const formattedTemplates = (data || []).map((template: any) => ({
-          id: template.templateId,
+          id: template.id,
           name: template.name || "Template sin nombre",
-          html: atob(template?.content ?? template?.message) || "",
+          design: template?.content?.design,
+          html: atob(template?.content?.html ?? template?.message) || "",
           createdAt: template.CreatedAt || new Date().toISOString(),
           isBackendTemplate: true,
           type: (template.channel || "email").toUpperCase() as TemplateType,
