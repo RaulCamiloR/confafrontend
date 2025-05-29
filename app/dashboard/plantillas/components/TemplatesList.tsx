@@ -8,12 +8,14 @@ import { TemplateType } from "../constants/plantillas";
 interface TemplatesListProps {
   onSelect?: (template: Template | any) => void;
   selectable?: boolean;
+  grid?: boolean;
   type?: TemplateType;
 }
 
 const TemplatesList: React.FC<TemplatesListProps> = ({
   onSelect,
   selectable = false,
+  grid = false,
   type,
 }) => {
   const { templates, selectTemplate, selectedTemplate, deleteTemplate } =
@@ -42,12 +44,10 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
 
         // Formatear los templates del backend para que tengan una estructura similar a los locales
         const formattedTemplates = (data || []).map((template: any) => ({
-          id:
-            template.Id ||
-            template.id ||
-            `backend-${Date.now()}-${Math.random()}`,
-          name: template.TemplateName || template.name || "Template sin nombre",
-          html: atob(template?.content ?? template?.message) || "",
+          id: template.id,
+          name: template.name || "Template sin nombre",
+          design: template?.content?.design,
+          html: atob(template?.content?.html ?? template?.message) || "",
           createdAt: template.CreatedAt || new Date().toISOString(),
           isBackendTemplate: true,
           type: (template.channel || "email").toUpperCase() as TemplateType,
@@ -164,7 +164,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex-grow pb-4">
         <div
-          className={`${selectable ? "flex flex-col justify-center w-full" : "grid grid-cols-1 lg:grid-cols-2"} gap-4`}
+          className={`${selectable && !grid ? "flex flex-col justify-center w-full" : "grid grid-cols-1 lg:grid-cols-2"} gap-4`}
         >
           {currentTemplates.map((template, index) => {
             // Determinar si es un template del backend
