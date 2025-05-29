@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user/login`,
       {
         method: "POST",
         body: JSON.stringify({ email: userName, password }),
