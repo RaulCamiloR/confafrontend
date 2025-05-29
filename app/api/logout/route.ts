@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/log-out`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user/logOut`,
       {
         headers: { Cookie: request.headers.get("cookie") ?? "" },
       },
@@ -20,6 +20,22 @@ export async function POST(request: Request) {
       res.headers.set("set-cookie", setCookie);
     }
 
+    res.headers.append(
+      "set-cookie",
+      "AccessToken=; HttpOnly; Secure; Path=/; Max-Age=0",
+    );
+    res.headers.append(
+      "set-cookie",
+      "IdToken=; HttpOnly; Secure; Path=/; Max-Age=0",
+    );
+    res.headers.append(
+      "set-cookie",
+      "RefreshToken=; HttpOnly; Secure; Path=/; Max-Age=0",
+    );
+    res.headers.append(
+      "set-cookie",
+      "TokenType=; HttpOnly; Secure; Path=/; Max-Age=0",
+    );
     res.headers.append(
       "set-cookie",
       "user=; HttpOnly; Secure; Path=/; Max-Age=0",

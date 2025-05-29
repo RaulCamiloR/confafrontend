@@ -8,14 +8,20 @@ import { User } from "./types";
 // Component.
 export const getCurrentUser = cache(async () => {
   const userCookie = (await cookies()).get("user");
+  const idToken = (await cookies()).get("IdToken");
 
-  if (!userCookie) {
+  if (!userCookie || !idToken) {
     return null;
   }
 
   const decodedUser = JSON.parse(atob(userCookie.value));
+  const decodedModules = JSON.parse(atob(idToken.value.split(".")[1]))[
+    "cognito:groups"
+  ];
 
   // Don't include secret tokens or private information as public fields.
   // Use classes to avoid accidentally passing the whole object to the client.
-  return decodedUser as User;
+  const user = decodedUser as User;
+  user.modules = decodedModules;
+  return user;
 });

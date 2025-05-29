@@ -5,23 +5,22 @@ import { Actions, Resources, creatPermisosModulo } from "./utils";
 
 //// NOTE: Modulos
 // NOTE: module names
-// TODO: Pendiente cambiar nombres que se hayan seleccionado desde el backend
-const CAMPAIGNS_EMAIL_READ = "Campanias EMAIL Read";
-const CAMPAIGNS_EMAIL_WRITE = "Campanias EMAIL Write";
-const CAMPAIGNS_SMS_READ = "Campanias SMS Read";
-const CAMPAIGNS_SMS_WRITE = "Campanias SMS Write";
-const CAMPAIGNS_VOICE_READ = "Campanias VOICE Read";
-const CAMPAIGNS_VOICE_WRITE = "Campanias VOICE Write";
-const CAMPAIGNS_WHATSAPP_READ = "Campanias WHATSAPP Read";
-const CAMPAIGNS_WHATSAPP_WRITE = "Campanias WHATSAPP Write";
-const AGENDA_DINAMICA_READ = "AGENDA_DINAMICA Read";
-const AGENDA_DINAMICA_WRITE = "AGENDA_DINAMICA Write";
-const REPORTES_READ = "REPORTES Read";
-const REPORTES_WRITE = "REPORTES Write";
-const ADMIN_READ = "ADMIN Read";
-const ADMIN_WRITE = "ADMIN Write";
-const CONTACTOS_READ = "CONTACTOS Read";
-const CONTACTOS_WRITE = "CONTACTOS Write";
+const CAMPAIGNS_EMAIL_READ = "EMAIL-READ";
+const CAMPAIGNS_EMAIL_WRITE = "EMAIL-WRITE";
+const CAMPAIGNS_SMS_READ = "SMS-READ";
+const CAMPAIGNS_SMS_WRITE = "SMS-WRITE";
+const CAMPAIGNS_VOICE_READ = "VOICE-READ";
+const CAMPAIGNS_VOICE_WRITE = "VOICE-WRITE";
+const CAMPAIGNS_WHATSAPP_READ = "WHATSAPP-READ";
+const CAMPAIGNS_WHATSAPP_WRITE = "WHATSAPP-WRITE";
+const ADMIN_READ = "ADMIN-READ";
+const ADMIN_WRITE = "ADMIN-WRITE";
+const AGENDA_DINAMICA_READ = "AGENDA-DINAMICA-READ";
+const AGENDA_DINAMICA_WRITE = "AGENDA-DINAMICA-WRITE";
+const REPORTES_READ = "REPORTES-READ";
+const REPORTES_WRITE = "REPORTES-WRITE";
+const CONTACTOS_READ = "CONTACTOS-READ";
+const CONTACTOS_WRITE = "CONTACTOS-WRITE";
 
 const policies: { [key: string]: ReturnType<typeof creatPermisosModulo> } = {
   [CAMPAIGNS_EMAIL_READ]: creatPermisosModulo(
@@ -117,31 +116,7 @@ export const testPolicy = async (
     return false;
   }
 
-  // TODO: Pendiente eliminar cuando el backend envie los modulos
-  user.modules = [
-    CAMPAIGNS_EMAIL_READ,
-    CAMPAIGNS_EMAIL_WRITE,
-    CAMPAIGNS_SMS_READ,
-    CAMPAIGNS_SMS_WRITE,
-    CAMPAIGNS_VOICE_READ,
-    CAMPAIGNS_VOICE_WRITE,
-    CAMPAIGNS_WHATSAPP_READ,
-    CAMPAIGNS_WHATSAPP_WRITE,
-    AGENDA_DINAMICA_READ,
-    AGENDA_DINAMICA_WRITE,
-    REPORTES_READ,
-    REPORTES_WRITE,
-    ADMIN_READ,
-    ADMIN_WRITE,
-    CONTACTOS_READ,
-    CONTACTOS_WRITE,
-  ];
-
   const keys = Object.keys(policies);
-  // // NOTE: Return false if any module exists
-  // if (user.modules.every((mod) => !keys.includes(mod))) {
-  //   return false;
-  // }
   // NOTE: Return false if at least one module don't exists
   if (user.modules.some((mod) => !keys.includes(mod))) {
     return false;
