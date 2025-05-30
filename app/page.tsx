@@ -81,6 +81,7 @@ const HomePage = async () => {
           )}
 
           {/* Validacion de rol de Admin */}
+
           {hasAdminAccess && (
             <HomeFeature
               title="Admin"
@@ -89,7 +90,10 @@ const HomePage = async () => {
               iconColor="text-purple-800"
               href="/admin"
             />
+
+
           )}
+
         </div>
       </div>
     </div>
