@@ -43,7 +43,7 @@ export const useSegments = ({
   const fetchSegments = async (pageNum: number, channel: ChannelType) => {
     setLoading(true);
     try {
-      const { data } = await axios("/api/segmentos", {
+      const { data } = await axios.get("/api/segmentos", {
         params: {
           channelType: channel,
           page: pageNum,
