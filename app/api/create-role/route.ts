@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
-        const { name, description, modules } = await request.json();
+        const { name, description, module } = await request.json();
+
+        console.log({ name, description, module })
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/role/create-role`, {
             method: "POST",
-            body: JSON.stringify({ name, description, modules }),
+            body: JSON.stringify({ name, description, module }),
             headers: {
                 "Content-Type": "application/json",
                 Cookie: request.headers.get("cookie") ?? "",

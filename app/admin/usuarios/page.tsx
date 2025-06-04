@@ -9,7 +9,6 @@ import RolModal from './components/RolModal';
 import Usuario from './components/Usuario';
 
 interface Usuario {
-  id: number;
   nombre: string;
   apellido: string;
   email: string;
@@ -19,6 +18,7 @@ interface Usuario {
 
 export default function UsuariosPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showRolBotton, setShowRolBotton] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRolModalOpen, setIsRolModalOpen] = useState(false);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -46,8 +46,7 @@ export default function UsuariosPage() {
 
         if (data.ok && data.users) {
  
-          const usuariosMapeados: Usuario[] = data.users.map((user: any, index: number) => ({
-            id: index + 1,
+          const usuariosMapeados: Usuario[] = data.users.map((user: any) => ({
             nombre: user.name,
             apellido: user.lastName,
             email: user.email,
@@ -107,13 +106,18 @@ export default function UsuariosPage() {
           <p className="text-gray-600 mt-2">Administra los usuarios del sistema</p>
         </div>
         <div className="flex space-x-3">
-          <button 
-            onClick={handleOpenRolModal}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-sm"
-          >
-            <MdSecurity className="text-xl" />
-            <span>Crear Rol</span>
-          </button>
+          {
+            showRolBotton && (
+              <button 
+                onClick={handleOpenRolModal}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-sm"
+              >
+                <MdSecurity className="text-xl" />
+                <span>Crear Rol</span>
+              </button>              
+            )
+          }
+
           <button 
             onClick={handleOpenCreateModal}
             className="flex items-center space-x-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
@@ -137,8 +141,7 @@ export default function UsuariosPage() {
           {usuarios.length > 0 ? (
             usuarios.map((usuario) => (
               <Usuario
-                key={usuario.id}
-                id={usuario.id}
+                key={usuario.email}
                 nombre={usuario.nombre}
                 apellido={usuario.apellido}
                 email={usuario.email}

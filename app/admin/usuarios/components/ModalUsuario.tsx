@@ -6,7 +6,6 @@ import axios from 'axios';
 import { areas, roles } from '../constants/constants';
 
 interface UsuarioData {
-  id: number;
   nombre: string;
   apellido: string;
   email: string;
@@ -74,7 +73,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
       console.log('Apellido editado:', selectedApellido);
       
       const response = await axios.post('/api/edit-user', {
-        id: usuarioData.id,
         email: usuarioData.email,
         area: selectedArea,
         rol: selectedRol,
@@ -124,13 +122,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
         {/* Datos del usuario */}
         <div className="p-4">
           <div className="space-y-3">
-            <div className="flex items-center space-x-3">
-              <MdPerson className="text-lg text-orange-500" />
-              <div>
-                <p className="text-sm text-gray-600">ID</p>
-                <p className="font-medium text-gray-800">{usuarioData.id}</p>
-              </div>
-            </div>
             
             {/* Nombre - Input */}
             <div className="flex items-center space-x-3">
