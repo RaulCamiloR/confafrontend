@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const channelType = url.searchParams.get("channelType");
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/template/templates-get`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/${channelType}`,
       {
         headers: {
           Cookie: request.headers.get("cookie"),
@@ -16,10 +18,10 @@ export async function GET(request: Request) {
     // console.log("Templates recibidos del backend:", response.data);
 
     let templates: any[] = [];
-
     if (response.data?.templates) {
       templates = response.data.templates;
       console.log(`Se encontraron ${templates.length} templates`);
+
     } else if (Array.isArray(response.data)) {
       templates = response.data;
       console.log(
