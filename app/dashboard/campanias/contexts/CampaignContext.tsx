@@ -25,6 +25,7 @@ export interface Segment {
 }
 
 export type CampaignType = 'EMAIL' | 'SMS' | 'VOICE';
+export type SchedulingType = 'instantanea' | 'programar';
 
 export interface Campaign {
   name: string;
@@ -33,6 +34,8 @@ export interface Campaign {
   segment: Segment | null;
   template: Template | null;
   type: CampaignType;
+  schedulingType: SchedulingType;
+  scheduledDate: Date | null;
 }
 
 interface CampaignContextType {
@@ -51,7 +54,9 @@ const initialCampaign: Campaign = {
   contact: null,
   segment: null,
   template: null,
-  type: 'EMAIL'
+  type: 'EMAIL',
+  schedulingType: 'instantanea',
+  scheduledDate: null
 }
 
 const CampaignContext = createContext<CampaignContextType | undefined>(undefined)
