@@ -4,6 +4,7 @@ import { MdPerson, MdEmail, MdLocationOn, MdSecurity, MdEdit, MdDelete } from 'r
 interface UsuarioProps {
   id: number;
   nombre: string;
+  apellido: string;
   email: string;
   area: string;
   rol: string;
@@ -21,10 +22,10 @@ const getRolColor = (rol: string) => {
   }
 };
 
-export default function Usuario({ id, nombre, email, area, rol, onEdit }: UsuarioProps) {
+export default function Usuario({ id, nombre, apellido, email, area, rol, onEdit }: UsuarioProps) {
   const handleEditClick = () => {
     if (onEdit) {
-      onEdit({ id, nombre, email, area, rol });
+      onEdit({ id, nombre, apellido, email, area, rol });
     }
   };
 
@@ -37,7 +38,9 @@ export default function Usuario({ id, nombre, email, area, rol, onEdit }: Usuari
             <MdPerson className="text-2xl text-gray-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 capitalize">{nombre}</h3>
+            <h3 className="text-lg font-semibold text-gray-800 capitalize">
+              {nombre} {apellido}
+            </h3>
             <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getRolColor(rol)}`}>
               {rol}
             </span>

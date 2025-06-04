@@ -1,14 +1,17 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { MdPerson, MdAdd } from 'react-icons/md';
+import { MdPerson, MdAdd, MdSecurity } from 'react-icons/md';
+import axios from 'axios';
 import ModalUsuario from './components/ModalUsuario';
 import CreateModal from './components/CreateModal';
+import RolModal from './components/RolModal';
 import Usuario from './components/Usuario';
 
 interface Usuario {
   id: number;
   nombre: string;
+  apellido: string;
   email: string;
   area: string;
   rol: string;
@@ -17,6 +20,7 @@ interface Usuario {
 export default function UsuariosPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRolModalOpen, setIsRolModalOpen] = useState(false);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
@@ -27,8 +31,7 @@ export default function UsuariosPage() {
       try {
         setLoading(true);
         
-        const response = await fetch('/api/get-users', {
-          method: 'GET',
+        const response = await axios.get('/api/get-users', {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -37,7 +40,7 @@ export default function UsuariosPage() {
         console.log('Response status:', response.status);
         console.log('Response headers:', response.headers);
         
-        const data = await response.json();
+        const data = response.data;
         
         console.log('✅ Respuesta:', data);
 
@@ -45,7 +48,8 @@ export default function UsuariosPage() {
  
           const usuariosMapeados: Usuario[] = data.users.map((user: any, index: number) => ({
             id: index + 1,
-            nombre: `${user.name} ${user.lastName}`,
+            nombre: user.name,
+            apellido: user.lastName,
             email: user.email,
             area: user.areaName || "No especificada", 
             rol: user.role?.name || "Usuario"
@@ -75,6 +79,14 @@ export default function UsuariosPage() {
     setIsCreateModalOpen(false);
   };
 
+  const handleOpenRolModal = () => {
+    setIsRolModalOpen(true);
+  };
+
+  const handleCloseRolModal = () => {
+    setIsRolModalOpen(false);
+  };
+
   const handleEditUser = (usuario: Usuario) => {
     console.log('🔧 Editando usuario:', usuario);
     setSelectedUser(usuario);
@@ -94,13 +106,22 @@ export default function UsuariosPage() {
           <h1 className="text-3xl font-bold text-gray-800">Gestión de Usuarios</h1>
           <p className="text-gray-600 mt-2">Administra los usuarios del sistema</p>
         </div>
-        <button 
-          onClick={handleOpenCreateModal}
-          className="flex items-center space-x-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
-        >
-          <MdAdd className="text-xl" />
-          <span>Nuevo Usuario</span>
-        </button>
+        <div className="flex space-x-3">
+          <button 
+            onClick={handleOpenRolModal}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-sm"
+          >
+            <MdSecurity className="text-xl" />
+            <span>Crear Rol</span>
+          </button>
+          <button 
+            onClick={handleOpenCreateModal}
+            className="flex items-center space-x-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+          >
+            <MdAdd className="text-xl" />
+            <span>Nuevo Usuario</span>
+          </button>
+        </div>
       </div>
 
       {/* Loading */}
@@ -119,6 +140,7 @@ export default function UsuariosPage() {
                 key={usuario.id}
                 id={usuario.id}
                 nombre={usuario.nombre}
+                apellido={usuario.apellido}
                 email={usuario.email}
                 area={usuario.area}
                 rol={usuario.rol}
@@ -140,13 +162,20 @@ export default function UsuariosPage() {
         onClose={handleCloseCreateModal} 
       />
 
-      {/* Modal para editar usuario */}
-      <ModalUsuario 
-        isOpen={isEditModalOpen} 
-        onClose={handleCloseEditModal}
-        usuarioData={selectedUser}
-        isEditMode={true}
+      {/* Modal para crear rol */}
+      <RolModal 
+        isOpen={isRolModalOpen} 
+        onClose={handleCloseRolModal} 
       />
+
+      {/* Modal para editar usuario */}
+      {selectedUser && (
+        <ModalUsuario 
+          isOpen={isEditModalOpen} 
+          onClose={handleCloseEditModal}
+          usuarioData={selectedUser}
+        />
+      )}
     </div>
   );
 }

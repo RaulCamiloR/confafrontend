@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { MdClose, MdPerson, MdEmail, MdBusiness, MdSecurity } from 'react-icons/md';
+import { areas, roles } from '../constants/constants';
 
 interface CreateModalProps {
   isOpen: boolean;
@@ -17,15 +18,7 @@ interface FormData {
   password: string;
 }
 
-const areas = [
-  "Marketing",
-  "Finanzas",
-];
 
-const roles = [
-  "admin",
-  "emailsmsRead"
-];
 
 export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
   const [formData, setFormData] = useState<FormData>({
