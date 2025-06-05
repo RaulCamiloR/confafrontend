@@ -22,6 +22,12 @@ export default function RolModal({ isOpen, onClose }: RolModalProps) {
   const [modules, setModules] = useState<Module[]>([]);
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
 
+  // Debug: verificar la inicialización del estado
+  useEffect(() => {
+    console.log('🔍 selectedModules cambió:', selectedModules);
+    console.log('🔍 Tipo:', typeof selectedModules, 'Es array?:', Array.isArray(selectedModules));
+  }, [selectedModules]);
+
   // useEffect para llamar a la API cuando se abra el modal
   useEffect(() => {
     if (isOpen) {
@@ -62,13 +68,22 @@ export default function RolModal({ isOpen, onClose }: RolModalProps) {
   };
 
   const handleModuleToggle = (moduleName: string) => {
+    console.log('🔄 Toggling module:', moduleName);
+    console.log('🔍 selectedModules antes del toggle:', selectedModules);
+    
     setSelectedModules(prev => {
+      console.log('🔍 prev en setSelectedModules:', prev);
+      
       if (prev.includes(moduleName)) {
         // Si ya está seleccionado, lo removemos
-        return prev.filter(module => module !== moduleName);
+        const newModules = prev.filter(module => module !== moduleName);
+        console.log('➖ Removiendo módulo. Nuevo array:', newModules);
+        return newModules;
       } else {
         // Si no está seleccionado, lo agregamos
-        return [...prev, moduleName];
+        const newModules = [...prev, moduleName];
+        console.log('➕ Agregando módulo. Nuevo array:', newModules);
+        return newModules;
       }
     });
   };
@@ -80,20 +95,26 @@ export default function RolModal({ isOpen, onClose }: RolModalProps) {
       return;
     }
 
-    if (selectedModules.length === 0) {
+    if (!selectedModules || selectedModules.length === 0) {
       alert('Por favor selecciona al menos un módulo');
       return;
     }
 
+    // Asegurar que selectedModules sea un array válido
+    const modulesArray = Array.isArray(selectedModules) ? selectedModules : [];
+    
     const rolObject = {
       name: name.trim(),
       description: description.trim(),
-      module: selectedModules
+      module: modulesArray
     };
 
     try {
       setCreating(true);
       console.log('📝 Creando rol:', rolObject);
+      console.log('🔍 selectedModules antes de enviar:', selectedModules);
+      console.log('🔍 modulesArray que se enviará:', modulesArray);
+      console.log('🔍 Tipo de modulesArray:', typeof modulesArray, 'Es array?:', Array.isArray(modulesArray));
 
       const response = await axios.post('/api/create-role', rolObject, {
         headers: {
@@ -123,6 +144,30 @@ export default function RolModal({ isOpen, onClose }: RolModalProps) {
     } finally {
       setCreating(false);
     }
+  };
+
+  const handleConsoleLog = () => {
+    // Asegurar que selectedModules sea un array válido
+    const modulesArray = Array.isArray(selectedModules) ? selectedModules : [];
+    
+    const rolObject = {
+      name: name.trim(),
+      description: description.trim(),
+      module: modulesArray
+    };
+
+    console.log('🖥️ ===== CONSOLE DEBUG =====');
+    console.log('📋 Payload que se enviaría a /api/create-role:');
+    console.log(JSON.stringify(rolObject, null, 2));
+    console.log('🔍 Detalles del estado actual:');
+    console.log('  - name:', `"${name}"`);
+    console.log('  - description:', `"${description}"`);
+    console.log('  - selectedModules:', selectedModules);
+    console.log('  - modulesArray (lo que va al API):', modulesArray);
+    console.log('  - Tipo de selectedModules:', typeof selectedModules);
+    console.log('  - Es selectedModules un array?:', Array.isArray(selectedModules));
+    console.log('  - Cantidad de módulos seleccionados:', modulesArray.length);
+    console.log('🖥️ ========================');
   };
 
   const handleClose = () => {
@@ -239,6 +284,13 @@ export default function RolModal({ isOpen, onClose }: RolModalProps) {
 
         {/* Footer */}
         <div className="flex justify-end space-x-3 p-4 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={handleConsoleLog}
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors text-sm"
+          >
+            Console
+          </button>
           <button
             onClick={handleClose}
             disabled={loading || creating}

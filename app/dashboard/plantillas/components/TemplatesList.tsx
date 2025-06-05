@@ -30,14 +30,15 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
   // Paginación
   const [currentPage, setCurrentPage] = useState<number>(1);
   const templatesPerPage: number = 9;
-
-  // Cargar los templates desde el backend
-  useEffect(() => {
-    const fetchTemplates = async () => {
+   const fetchTemplates = async () => {
       try {
         setLoading(true);
 
-        const { data } = await axios.get("/api/templates");
+        const { data } = await axios.get("/api/templates",{
+          params:{
+            channelType:type
+          }
+        });
 
         // Mostrar los templates en la consola
         // console.log("Templates obtenidos del backend:", data);
@@ -63,11 +64,19 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
       }
     };
 
+  // Cargar los templates desde el backend
+  /*useEffect(() => {
+   
+
     fetchTemplates();
 
     // Mostrar los templates en contexto al montar el componente
     // console.log("Templates en contexto:", templates);
-  }, []);
+  }, []);*/
+
+    useEffect(() => {
+      fetchTemplates();
+    }, [type]);
 
   const handleSelect = (template: Template | any) => {
     // Si es un template del backend, manejarlo de manera especial

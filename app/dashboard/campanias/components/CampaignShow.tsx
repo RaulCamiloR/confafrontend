@@ -29,39 +29,40 @@ const CampaniasPage = ({
   const [page, setPage] = useState(1);
   const [selectedType, setSelectedType] = useState<string>(
     hasEmailPermission
-      ? "email"
+      ? "EMAIL"
       : hasSmsPermission
-        ? "sms"
+        ? "SMS"
         : hasVoicePermission
-          ? "voice"
+          ? "VOICE"
           : "",
   ); // Filtro por tipo
 
   // Cargar campañas al inicio
-  useEffect(() => {
-    const loadCampaigns = async () => {
+
+  const getChannelCampaigns = async (channelType: string) => {
       setLoading(true);
-      try {
-        const { data } = await axios.get("/api/campaigns");
-        setAllCampaigns(data.campaigns || []);
-      } catch (error) {
-        console.error("Error cargando campañas:", error);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      const { data } = await axios.get("/api/campaigns", {
+        params: { channelType },
+      });
+      return data.campaigns || [];
+    } catch (error) {
+      console.error("Error cargando campañas:", error);
+       return []; 
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchFilteredCampaigns = async () => {
+      const filtered = await getChannelCampaigns(selectedType);
+      setFilteredCampaigns(filtered);
+      setPage(1); // Reset a la primera página cuando cambia el filtro
     };
 
-    loadCampaigns();
-  }, []);
-
-  // Filtrar campañas por tipo cuando cambie el filtro o las campañas
-  useEffect(() => {
-    const filtered = allCampaigns.filter(
-      (campaign) => campaign.type.toLowerCase() === selectedType.toLowerCase(),
-    );
-    setFilteredCampaigns(filtered);
-    setPage(1); // Reset a la primera página cuando cambia el filtro
-  }, [allCampaigns, selectedType]);
+    fetchFilteredCampaigns();
+  }, [selectedType]);
 
   // Calcular campañas a mostrar basado en la página actual
   useEffect(() => {
@@ -93,6 +94,19 @@ const CampaniasPage = ({
     }
   };
 
+  const channelOptions = [
+    { type: "EMAIL", label: "EMAIL", visible: hasEmailPermission },
+    { type: "SMS", label: "SMS", visible: hasSmsPermission },
+    { type: "VOICE", label: "VOICE", visible: hasVoicePermission },
+  ];
+
+  const renderButtonClass = (type: string) =>
+    `px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+      selectedType === type
+        ? "bg-orange-500 text-white"
+        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+  }`;
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
       {/* Encabezado con filtros */}
@@ -101,43 +115,19 @@ const CampaniasPage = ({
           <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
             Campañas
           </h1>
+
           <div className="flex space-x-2">
-            {hasEmailPermission && (
-              <button
-                onClick={() => handleTypeChange("email")}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  selectedType === "email"
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-              >
-                EMAIL
-              </button>
-            )}
-            {hasSmsPermission && (
-              <button
-                onClick={() => handleTypeChange("sms")}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  selectedType === "sms"
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-              >
-                SMS
-              </button>
-            )}
-            {hasVoicePermission && (
-              <button
-                onClick={() => handleTypeChange("voice")}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  selectedType === "voice"
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-              >
-                VOICE
-              </button>
-            )}
+            {channelOptions
+              .filter(({ visible }) => visible)
+              .map(({ type, label }) => (
+                <button
+                  key={type}
+                  onClick={() => handleTypeChange(type)}
+                  className={renderButtonClass(type)}
+                >
+                  {label}
+                </button>
+              ))}
           </div>
         </div>
       </div>

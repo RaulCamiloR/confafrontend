@@ -2,15 +2,14 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   
-  const { id, rol, area, email, name, lastName } = await request.json();
+  const { rol, area, email, name, lastName } = await request.json();
 
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user/update-user`,
       {
         method: "POST",
-        body: JSON.stringify({ 
-            //id,
+        body: JSON.stringify({
             email,
             roleName: rol, 
             areaName: area,

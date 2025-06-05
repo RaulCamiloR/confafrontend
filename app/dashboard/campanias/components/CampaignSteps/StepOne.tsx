@@ -11,9 +11,10 @@ import { useCampaignPermissions } from "@/app/dashboard/campanias/contexts/Campa
 
 interface StepOneProps {
   onNext: () => void;
+  onPrev?: () => void;
 }
 
-const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
+const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
   const { hasEmailPermission, hasSmsPermission, hasVoicePermission } =
     useCampaignPermissions();
 
@@ -145,10 +146,18 @@ const StepOne: React.FC<StepOneProps> = ({ onNext }) => {
         </div>
       )*/}
 
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-between pt-4">
+        {onPrev && (
+          <button
+            onClick={onPrev}
+            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            Anterior
+          </button>
+        )}
         <button
           onClick={handleNext}
-          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 ml-auto"
         >
           Siguiente
         </button>
