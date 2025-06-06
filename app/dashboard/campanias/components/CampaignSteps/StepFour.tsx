@@ -163,7 +163,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Programación de la Campaña
           </h4>
@@ -195,7 +195,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
               </p>
             )}
           </div>
-        </div>
+        </div> */} // TODO DESCOMENTAR
 
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
