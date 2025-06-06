@@ -220,7 +220,7 @@ const uploadFiles = async (file: any) => {
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
-              accept=".xlsx"
+              accept=".csv"
               className="hidden"
               id="fileUpload"
             />
