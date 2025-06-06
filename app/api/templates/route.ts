@@ -127,7 +127,6 @@ export async function PUT(request: Request) {
   try {
     const { templateName, jsonTemplate, content, channel, id } =
       await request.json();
-
     const params = {
       templateName,
       content: btoa(content),
@@ -142,7 +141,7 @@ export async function PUT(request: Request) {
       contentLength: params.content.length,
     });
 
-    const response = await axios.post(
+    const response = await axios.put(
       `${process.env.NEXT_PUBLIC_BASE_URL}/template/${channel}/${id}`,
       params,
       {

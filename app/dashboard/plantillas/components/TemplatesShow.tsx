@@ -111,6 +111,7 @@ const PlantillasPage = ({
                     setEditorType("EMAIL");
                     setShowTemplateSelection(false);
                     setShowEditor(true);
+                    setTemplateToEdit(undefined)
                   }}
                   className="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700 min-w-96"
                 >
@@ -145,6 +146,7 @@ const PlantillasPage = ({
                     setEditorType("SMS");
                     setShowTemplateSelection(false);
                     setShowEditor(true);
+                    setTemplateToEdit(undefined)
                   }}
                   className="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700 min-w-96"
                 >
