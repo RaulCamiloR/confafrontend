@@ -6,13 +6,18 @@ export async function POST(request: Request) {
       await request.json();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/segment/${channelType}/create-upload-url?fileName=${fileName}&contentType=${fileType}&segmentName=${segmentName}&channelType=${channelType}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/segment/${channelType}`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Cookie: request.headers.get("cookie") ?? "",
           Authorization: request.headers.get("Authorization") ?? "",
         },
+        body: JSON.stringify({
+          fileName,
+          contentType: fileType,
+          segmentName
+        }),
       },
     );
 
