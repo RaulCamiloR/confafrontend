@@ -48,7 +48,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
           id: template.id,
           name: template.name || "Template sin nombre",
           design: template?.content?.design,
-          html: atob(template?.content?.html ?? template?.message) || "",
+           html: atob(template?.content?.html ?? template?.content?.message) || "",
           createdAt: template.CreatedAt || new Date().toISOString(),
           isBackendTemplate: true,
           type: (template.channel || "email").toUpperCase() as TemplateType,
