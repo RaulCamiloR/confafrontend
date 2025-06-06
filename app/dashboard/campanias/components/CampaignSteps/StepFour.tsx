@@ -160,8 +160,45 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           </div>
         </div>
 
+        {/* <div>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+<<<<<<< Updated upstream
+=======
+            Programación de la Campaña
+          </h4>
+          <div className="space-y-1 text-sm">
+            <p className="text-gray-600 dark:text-gray-400">
+              <span className="font-medium">Tipo de envío:</span>{" "}
+              {campaign.schedulingType === "instantanea" ? (
+                <span className="inline-flex items-center">
+                  <FiZap className="mr-1 text-orange-500" /> Envío Instantáneo
+                </span>
+              ) : (
+                <span className="inline-flex items-center">
+                  <FiClock className="mr-1 text-blue-500" /> Campaña Programada
+                </span>
+              )}
+            </p>
+            {campaign.schedulingType === "programar" && campaign.scheduledDate && (
+              <p className="text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Fecha programada:</span>{" "}
+                <span className="inline-flex items-center">
+                  <FiCalendar className="mr-1" />
+                  {new Date(campaign.scheduledDate).toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+              </p>
+            )}
+          </div>
+        </div> */} // TODO DESCOMENTAR
+
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+>>>>>>> Stashed changes
             Segmento Seleccionado
           </h4>
           {campaign.segment ? (

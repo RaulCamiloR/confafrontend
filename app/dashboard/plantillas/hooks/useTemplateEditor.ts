@@ -50,10 +50,40 @@ export const useTemplateEditor = () => {
       const { design, html } = data
       
       try {
+<<<<<<< Updated upstream
         const params = {
           templateName,
           content: html,
           channel: 'EMAIL',
+=======
+        if (templateId) {
+          const params = {
+            id: templateId,
+            templateName,
+            content: html,
+            jsonTemplate: design,
+            channel: "EMAIL",
+          };
+
+          console.log({ params });
+
+          const { data } = await axios.put("/api/templates", params);
+
+          console.log({ data });
+        } else {
+          const params = {
+            templateName,
+            content: html,
+            jsonTemplate: design,
+            channel: "EMAIL",
+          };
+
+          console.log({ params });
+
+          const { data } = await axios.post("/api/templates", params);
+
+          console.log({ data });
+>>>>>>> Stashed changes
         }
 
         console.log({params})

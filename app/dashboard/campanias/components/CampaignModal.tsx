@@ -14,7 +14,11 @@ interface CampaignModalProps {
 }
 
 const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
+<<<<<<< Updated upstream
   const [currentStep, setCurrentStep] = useState(1)
+=======
+  const [currentStep, setCurrentStep] = useState(1) // TODO VOLVER A 0
+>>>>>>> Stashed changes
   const { campaign, resetCampaign } = useCampaign()
   
   const totalSteps = campaign.type === 'VOICE' ? 3 : 4
@@ -30,7 +34,11 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const handleClose = () => {
     resetCampaign()
+<<<<<<< Updated upstream
     setCurrentStep(1)
+=======
+    setCurrentStep(1) // TODO VOLVER A 0
+>>>>>>> Stashed changes
     onClose()
   }
 
