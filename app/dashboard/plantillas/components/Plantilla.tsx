@@ -49,7 +49,7 @@ const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
           >
             Duplicar Template
           </button>
-          } */} // TODO DESCOMENTAR
+          } TODO DESCOMENTAR */}
         </div>
 
         {/* Formulario de guardar template */}
