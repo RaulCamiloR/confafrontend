@@ -131,6 +131,7 @@ export const useTemplateEditor = ({
       try {
         if (templateId) {
           const params = {
+            id: templateId,
             templateName,
             content: html,
             jsonTemplate: design,

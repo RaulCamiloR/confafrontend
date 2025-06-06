@@ -125,7 +125,7 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const { templateName, jsonTemplate, content, channel } =
+    const { templateName, jsonTemplate, content, channel, id } =
       await request.json();
 
     const params = {
@@ -143,7 +143,7 @@ export async function PUT(request: Request) {
     });
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/template/${channel}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/${channel}/${id}`,
       params,
       {
         headers: {
