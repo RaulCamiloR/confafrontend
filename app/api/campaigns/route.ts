@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const { name, type, templateName, segmentName } = await request.json();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/campaign/create-campaign`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/campaign/${type}`,
       {
         method: "POST",
         headers: {
