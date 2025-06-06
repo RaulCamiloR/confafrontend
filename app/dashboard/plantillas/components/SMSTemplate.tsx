@@ -12,6 +12,7 @@ interface NotificationType {
 const SMSTemplate = ({ templateToEdit }: { templateToEdit?: Template }) => {
   const [templateName, setTemplateName] = useState('');
   const [smsContent, setSmsContent] = useState('');
+  const [templateId, setTemplateId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [notification, setNotification] = useState<NotificationType | null>(null);
   const [charactersLeft, setCharactersLeft] = useState(160);
@@ -27,6 +28,7 @@ const SMSTemplate = ({ templateToEdit }: { templateToEdit?: Template }) => {
     if(templateToEdit){
       setTemplateName(templateToEdit.name)
       setSmsContent(templateToEdit?.html)
+      setTemplateId(templateToEdit?.id);
     }
   }, [templateToEdit])
   
@@ -63,7 +65,12 @@ const SMSTemplate = ({ templateToEdit }: { templateToEdit?: Template }) => {
         channel: 'SMS'
       };
 
-      const { data } = await axios.post('/api/templates', params);
+      if (templateId){
+        await axios.put('/api/templates', ({...params, id:templateId}));
+      } else {
+
+        await axios.post('/api/templates', params);
+      }
       
       setNotification({
         message: '¡Plantilla SMS guardada exitosamente!',
