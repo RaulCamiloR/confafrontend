@@ -42,6 +42,78 @@ export const useTemplateEditor = ({
     });
   };
 
+  const duplicateTemplate = async () => {
+    if (isProcessing) return;
+
+    /*if (!templateName.trim()) {
+      alert("Por favor ingrese un nombre para el template");
+      return;
+    }*/
+
+    setIsProcessing(true);
+    const unlayer = emailEditorRef.current?.editor;
+
+    unlayer?.exportHtml(async (data) => {
+      const { design, html } = data;
+
+      try {
+        const params = {
+            templateName: `${templateName} (Copia)`,
+            content: html,
+            jsonTemplate: design,
+            channel: "EMAIL",
+          };
+
+        console.log({ params });
+
+        const { data } = await axios.post("/api/templates", params);
+
+        console.log({ data });
+
+        setNotification({
+          message: "¡Template guardado exitosamente!",
+          type: "success",
+        });
+
+        // Limpiar campos después de guardar exitosamente
+        setTemplateName("");
+        setShowSaveForm(false);
+
+        // Resetear notification después de 3 segundos
+        setTimeout(() => {
+          setNotification(null);
+          setIsProcessing(false);
+        }, 3000);
+      } catch (error: any) {
+        console.error("Error al guardar el template:", error);
+
+        // Verificar si es un error de nombre duplicado
+        let errorMsg = "Error al guardar el template";
+
+        if (error.response) {
+          const statusCode = error.response.status;
+          const responseData = error.response.data;
+
+          // Si recibimos un mensaje específico del backend sobre duplicación
+          if (
+            statusCode === 409 ||
+            (responseData &&
+              responseData.error &&
+              responseData.error.includes("existe"))
+          ) {
+            errorMsg = `Ya existe un template con el nombre "${templateName}". Por favor, usa un nombre diferente.`;
+          }
+        }
+
+        setNotification({ message: errorMsg, type: "error" });
+        setTimeout(() => {
+          setNotification(null);
+          setIsProcessing(false);
+        }, 3000);
+      }
+    });
+  };
+
   const saveTemplate = async (templateId?: string) => {
     if (isProcessing) return;
 
@@ -166,6 +238,7 @@ export const useTemplateEditor = ({
     // Funciones
     exportHtml,
     saveTemplate,
+    duplicateTemplate,
     onReady,
     handleTemplateNameChange,
     toggleSaveForm,
