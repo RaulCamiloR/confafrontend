@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useCampaign } from '../contexts/CampaignContext'
+import StepZero from './CampaignSteps/StepZero'
 import StepOne from './CampaignSteps/StepOne'
 import StepTwo from './CampaignSteps/StepTwo'
 import StepThree from './CampaignSteps/StepThree'
@@ -14,10 +15,10 @@ interface CampaignModalProps {
 }
 
 const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(0)
   const { campaign, resetCampaign } = useCampaign()
   
-  const totalSteps = campaign.type === 'VOICE' ? 3 : 4
+  const totalSteps = campaign.type === 'VOICE' ? 4 : 5
 
   // Efecto para saltar al paso 4 si el tipo es VOICE y estamos en el paso 3
   useEffect(() => {
@@ -30,13 +31,13 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const handleClose = () => {
     resetCampaign()
-    setCurrentStep(1)
+    setCurrentStep(0)
     onClose()
   }
 
   const nextStep = () => {
-    if (currentStep < totalSteps) {
-      // Si estamos en el paso 2 y el tipo es VOICE, ir directamente al paso 4
+    if (currentStep < totalSteps - 1) {
+      // Si estamos en el paso 2 (StepTwo) y el tipo es VOICE, ir directamente al paso 4 (StepFour)
       if (currentStep === 2 && campaign.type === 'VOICE') {
         setCurrentStep(4)
       } else {
@@ -46,8 +47,8 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
   }
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      // Si estamos en el paso 4 y el tipo es VOICE, volver al paso 2
+    if (currentStep > 0) {
+      // Si estamos en el paso 4 (StepFour) y el tipo es VOICE, volver al paso 2 (StepTwo)
       if (currentStep === 4 && campaign.type === 'VOICE') {
         setCurrentStep(2)
       } else {
@@ -58,8 +59,10 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const renderStep = () => {
     switch (currentStep) {
+      case 0:
+        return <StepZero onNext={nextStep} />
       case 1:
-        return <StepOne onNext={nextStep} />
+        return <StepOne onNext={nextStep} onPrev={prevStep} />
       case 2:
         return <StepTwo onNext={nextStep} onPrev={prevStep} />
       case 3:
@@ -67,12 +70,14 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
       case 4:
         return <StepFour onPrev={prevStep} onClose={handleClose} />
       default:
-        return <StepOne onNext={nextStep} />
+        return <StepZero onNext={nextStep} />
     }
   }
 
   const getStepTitle = () => {
     switch (currentStep) {
+      case 0:
+        return 'Programar Campaña'
       case 1:
         return 'Información de Campaña'
       case 2:
@@ -96,19 +101,21 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
 
   const calculateProgress = () => {
     if (campaign.type === 'VOICE') {
-      // Para VOICE tenemos 3 pasos: 1, 2 y 4
+      // Para VOICE tenemos 4 pasos: 0, 1, 2 y 4
       switch (currentStep) {
+        case 0:
+          return 25; // 25% en el primer paso
         case 1:
-          return 33; // 33% en el primer paso
+          return 50; // 50% en el segundo paso
         case 2:
-          return 66; // 66% en el segundo paso
+          return 75; // 75% en el tercer paso
         case 4:
           return 100; // 100% en el último paso
         default:
-          return 33;
+          return 25;
       }
     } else {
-      return (currentStep / 4) * 100;
+      return ((currentStep + 1) / 5) * 100;
     }
   }
 
