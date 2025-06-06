@@ -23,17 +23,13 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
       newErrors.scheduledDate = "Debes seleccionar una fecha para la campaña programada";
     }
 
-    // Validar que la fecha no sea en el pasado
+    // Validar que la fecha y hora no sea en el pasado
     if (campaign.schedulingType === 'programar' && campaign.scheduledDate) {
       const now = new Date();
       const selectedDate = new Date(campaign.scheduledDate);
       
-      // Comparar solo fechas (sin hora)
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const selected = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-      
-      if (selected < today) {
-        newErrors.scheduledDate = "La fecha programada no puede ser anterior a hoy";
+      if (selectedDate <= now) {
+        newErrors.scheduledDate = "La fecha y hora programada debe ser posterior al momento actual";
       }
     }
 
@@ -56,7 +52,31 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value ? new Date(e.target.value) : null;
+    
+    // Si hay una fecha existente con hora, mantener la hora
+    if (selectedDate && campaign.scheduledDate) {
+      const existingDate = new Date(campaign.scheduledDate);
+      selectedDate.setHours(existingDate.getHours(), existingDate.getMinutes());
+    }
+    
     updateCampaign({ scheduledDate: selectedDate });
+    setErrors({});
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return;
+    
+    const [hours, minutes] = e.target.value.split(':');
+    const newDate = campaign.scheduledDate ? new Date(campaign.scheduledDate) : new Date();
+    
+    // Si no hay fecha seleccionada, usar la fecha de hoy
+    if (!campaign.scheduledDate) {
+      const today = new Date();
+      newDate.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
+    }
+    
+    newDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    updateCampaign({ scheduledDate: newDate });
     setErrors({});
   };
 
@@ -66,10 +86,32 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
     return date.toISOString().split('T')[0];
   };
 
+  // Formatear hora para el input (HH:MM)
+  const formatTimeForInput = (date: Date | null) => {
+    if (!date) return '';
+    return date.toTimeString().slice(0, 5);
+  };
+
   // Obtener fecha mínima (hoy)
   const getMinDate = () => {
     const today = new Date();
     return today.toISOString().split('T')[0];
+  };
+
+  // Obtener hora mínima si la fecha seleccionada es hoy
+  const getMinTime = () => {
+    if (!campaign.scheduledDate) return '';
+    
+    const today = new Date();
+    const selectedDate = new Date(campaign.scheduledDate);
+    
+    // Si la fecha seleccionada es hoy, la hora mínima es la hora actual + 1 minuto
+    if (selectedDate.toDateString() === today.toDateString()) {
+      const minTime = new Date(today.getTime() + 60000); // +1 minuto
+      return minTime.toTimeString().slice(0, 5);
+    }
+    
+    return '';
   };
 
   return (
@@ -152,39 +194,71 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
         </div>
       </div>
 
-      {/* Selector de fecha - solo se muestra si se selecciona "programar" */}
+      {/* Selector de fecha y hora - solo se muestra si se selecciona "programar" */}
       {campaign.schedulingType === 'programar' && (
         <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <label 
-            htmlFor="scheduled-date" 
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            <FiCalendar className="inline mr-2" size={14} />
-            Fecha de envío
-          </label>
-          <input
-            type="date"
-            id="scheduled-date"
-            value={formatDateForInput(campaign.scheduledDate)}
-            onChange={handleDateChange}
-            min={getMinDate()}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white ${
-              errors.scheduledDate
-                ? "border-red-500 dark:border-red-500"
-                : "border-gray-300 dark:border-gray-500"
-            }`}
-          />
+          <div className="space-y-4">
+            {/* Selector de Fecha */}
+            <div>
+              <label 
+                htmlFor="scheduled-date" 
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                <FiCalendar className="inline mr-2" size={14} />
+                Fecha de envío
+              </label>
+              <input
+                type="date"
+                id="scheduled-date"
+                value={formatDateForInput(campaign.scheduledDate)}
+                onChange={handleDateChange}
+                min={getMinDate()}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white ${
+                  errors.scheduledDate
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-500"
+                }`}
+              />
+            </div>
+
+            {/* Selector de Hora */}
+            <div>
+              <label 
+                htmlFor="scheduled-time" 
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                <FiClock className="inline mr-2" size={14} />
+                Hora de envío
+              </label>
+              <input
+                type="time"
+                id="scheduled-time"
+                value={formatTimeForInput(campaign.scheduledDate)}
+                onChange={handleTimeChange}
+                min={getMinTime()}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white ${
+                  errors.scheduledDate
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-500"
+                }`}
+              />
+            </div>
+          </div>
+
           {errors.scheduledDate && (
-            <p className="mt-1 text-sm text-red-500">{errors.scheduledDate}</p>
+            <p className="mt-2 text-sm text-red-500">{errors.scheduledDate}</p>
           )}
           
           {campaign.scheduledDate && (
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
               La campaña se enviará el {new Date(campaign.scheduledDate).toLocaleDateString('es-ES', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
+              })} a las {new Date(campaign.scheduledDate).toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
               })}
             </p>
           )}
