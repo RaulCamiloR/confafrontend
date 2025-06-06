@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     });
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/template/templates-create`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/template/${channel}`,
       params,
       {
         headers: {

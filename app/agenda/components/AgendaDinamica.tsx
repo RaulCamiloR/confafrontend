@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { FiUpload, FiFile, FiCheck, FiX } from 'react-icons/fi';
 import axios from 'axios';
+import Papa from 'papaparse';
 
 const AgendaDinamica = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -11,6 +12,8 @@ const AgendaDinamica = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error'} | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [jsonData, setJsonData] = useState<Record<string, string>[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,9 +26,9 @@ const AgendaDinamica = () => {
   const validateAndSetFile = (selectedFile: File) => {
     // Validar que sea un archivo Excel (.xlsx)
     const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
-    if (fileExtension !== 'xlsx') {
+    if (fileExtension !== 'csv') {
       setNotification({
-        message: 'Por favor, seleccione un archivo Excel (.xlsx)',
+        message: 'Por favor, seleccione un archivo Excel (.csv)',
         type: 'error'
       });
       setTimeout(() => setNotification(null), 3000);
@@ -61,6 +64,53 @@ const AgendaDinamica = () => {
     fileInputRef.current?.click();
   };
 
+const uploadFiles = async (file: any) => {
+  try {
+    console.log("entra")
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    const { data } = await axios.post(
+      "/api/dinamic-agend",  // URL
+      file,                  // body (payload)
+      {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = progressEvent.total
+            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            : 0;
+          setUploadProgress(percentCompleted);
+        }
+      }
+    );
+
+      setNotification({
+            message: `Archivo "${fileName}" subido exitosamente `,
+            type: 'success'
+          });
+
+  } catch (error) {
+    setNotification({
+      message: 'Error al subir el archivo.',
+      type: 'error',
+    });
+    console.error(error);
+    setIsUploading(false)
+    setFile(null);
+    setFileName('');
+
+  } finally {
+   
+    setTimeout(() => {
+        handleRemoveFile()
+        setIsUploading(false)
+        setNotification(null);
+
+      }, 5000);
+
+  }
+};
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -78,39 +128,58 @@ const AgendaDinamica = () => {
     setNotification(null);
 
     try {
-      // 1. Obtener la URL de carga prefirmada
-      const presignedUrlResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_UPLOAD_EXCEL}`
-      );
+      
+      console.log("file")
+      
+    Papa.parse(file, {
+      delimiter: ';',
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        try {
+          const data = results.data as Record<string, string>[];
 
-      const { uploadURL, Key } = presignedUrlResponse.data;
+          // Convertimos las claves del encabezado a minúscula y las limpiamos
+          const originalKeys = Object.keys(data[0] || {});
+          const keys = originalKeys.map((key) => key.trim().toLowerCase());
 
-      // 2. Subir el archivo a S3 usando la URL prefirmada
-      await axios.put(uploadURL, file, {
-        headers: {
-          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = progressEvent.total 
-            ? Math.round((progressEvent.loaded * 100) / progressEvent.total) 
-            : 0;
-          setUploadProgress(percentCompleted);
+          const formatted = data.map((row) => {
+            const cleaned: Record<string, string> = {};
+            keys.forEach((key, index) => {
+              const originalKey = originalKeys[index];
+              cleaned[key] = row[originalKey]?.trim() ?? '';
+            });
+            return cleaned;
+          });
+         
+          setJsonData(formatted);
+
+          console.log('Data:', formatted);
+        
+          uploadFiles(formatted)
+        
+          
+
+        } catch (err) {
+          setNotification({
+            message:'Error al procesar el archivo.',
+            type:'error'
+          });
+          console.error(err);
         }
-      });
+      },
+      error: (err) => {
+          setNotification({
+            message:'Error al leer el archivo CSV.',
+            type:'error'
+          });
+        console.error(err);
+      },
+    });
+                   
 
-      // 3. Notificar éxito
-      setNotification({
-        message: `Archivo "${fileName}" subido exitosamente con ID: ${Key}`,
-        type: 'success'
-      });
+      //sendToBackend(formatted);
 
-      // Limpiar el formulario después de 3 segundos
-      setTimeout(() => {
-        setFile(null);
-        setFileName('');
-        setUploadProgress(0);
-        setNotification(null);
-      }, 5000);
     } catch (error) {
       console.error('Error al subir el archivo:', error);
       setNotification({
@@ -139,7 +208,7 @@ const AgendaDinamica = () => {
         </h1>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Sube un archivo Excel (.xlsx) con la información de tu agenda.
+          Sube un archivo Excel (.csv) con la información de tu agenda.
         </p>
         
         <form onSubmit={handleSubmit}>
@@ -170,7 +239,7 @@ const AgendaDinamica = () => {
               <span className="font-semibold">Haz clic para subir</span> o arrastra y suelta
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Solo archivos Excel (.xlsx)
+              Solo archivos Excel (.csv)
             </p>
           </div>
           
