@@ -127,7 +127,6 @@ export const useTemplateEditor = ({
 
     unlayer?.exportHtml(async (data) => {
       const { design, html } = data;
-
       try {
         if (templateId) {
           const params = {
@@ -139,7 +138,6 @@ export const useTemplateEditor = ({
           };
 
           console.log({ params });
-
           const { data } = await axios.put("/api/templates", params);
 
           console.log({ data });

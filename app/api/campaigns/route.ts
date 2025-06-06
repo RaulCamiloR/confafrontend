@@ -45,7 +45,7 @@ export async function GET(request: Request) {
 }
 export async function POST(request: Request) {
   try {
-    const { name, type, templateName, segmentName } = await request.json();
+    const { name, type, templateId, segmentId } = await request.json();
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/campaign/${type}`,
@@ -59,8 +59,8 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           name,
           type,
-          templateName,
-          segmentName,
+          templateId,
+          segmentId,
         }),
       },
     );
