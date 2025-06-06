@@ -66,13 +66,10 @@ const AgendaDinamica = () => {
 
 const uploadFiles = async (file: any) => {
   try {
-    console.log("entra")
     setIsUploading(true);
     setUploadProgress(0);
 
-    const { data } = await axios.post(
-      "/api/dinamic-agend",  // URL
-      file,                  // body (payload)
+  await axios.put("/api/dinamic-agend", file,                  
       {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = progressEvent.total
@@ -83,10 +80,10 @@ const uploadFiles = async (file: any) => {
       }
     );
 
-      setNotification({
-            message: `Archivo "${fileName}" subido exitosamente `,
-            type: 'success'
-          });
+  setNotification({
+        message: `Archivo "${fileName}" subido exitosamente `,
+        type: 'success'
+      });
 
   } catch (error) {
     setNotification({
@@ -128,9 +125,7 @@ const uploadFiles = async (file: any) => {
     setNotification(null);
 
     try {
-      
-      console.log("file")
-      
+            
     Papa.parse(file, {
       delimiter: ';',
       header: true,
@@ -152,10 +147,7 @@ const uploadFiles = async (file: any) => {
             return cleaned;
           });
          
-          setJsonData(formatted);
-
-          console.log('Data:', formatted);
-        
+          //setJsonData(formatted);        
           uploadFiles(formatted)
         
           

@@ -1,19 +1,20 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function PUT(request: Request) {
   try {
     const body = await request.json();
+    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/dynamic-agenda`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Cookie: request.headers.get("cookie") ?? "",
           Authorization: request.headers.get("Authorization") ?? "",
         },
-        body: body,
+        body:  JSON.stringify(body),
       },
     );
     if (response.status >= 400) {
