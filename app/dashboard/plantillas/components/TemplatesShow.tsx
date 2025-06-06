@@ -192,10 +192,10 @@ const PlantillasPage = ({
             </span>
           </div>
 
-          {editorType === "EMAIL" ? (
+          {templateType === "EMAIL" ? (
             <Plantilla templateToEdit={templateToEdit} />
           ) : (
-            <SMSTemplate />
+            <SMSTemplate  templateToEdit={templateToEdit}   />
           )}
         </div>
       )}

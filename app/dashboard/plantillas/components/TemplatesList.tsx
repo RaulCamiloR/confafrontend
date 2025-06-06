@@ -64,15 +64,6 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
       }
     };
 
-  // Cargar los templates desde el backend
-  /*useEffect(() => {
-   
-
-    fetchTemplates();
-
-    // Mostrar los templates en contexto al montar el componente
-    // console.log("Templates en contexto:", templates);
-  }, []);*/
 
     useEffect(() => {
       fetchTemplates();
@@ -92,7 +83,6 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
         createdAt: new Date(template.createdAt),
         type: template.type || "EMAIL",
       };
-
       if (onSelect) {
         onSelect(compatibleTemplate);
       }

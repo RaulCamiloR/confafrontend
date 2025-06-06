@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Template } from '../contexts/TemplateContext';
 
 interface NotificationType {
   message: string;
   type: 'success' | 'error';
 }
 
-const SMSTemplate = () => {
+const SMSTemplate = ({ templateToEdit }: { templateToEdit?: Template }) => {
   const [templateName, setTemplateName] = useState('');
   const [smsContent, setSmsContent] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -21,6 +22,15 @@ const SMSTemplate = () => {
     setSmsContent(content);
     setCharactersLeft(160 - content.length);
   };
+
+  useEffect(() => {
+    if(templateToEdit){
+      setTemplateName(templateToEdit.name)
+      setSmsContent(templateToEdit?.html)
+    }
+  }, [templateToEdit])
+  
+
 
   // Guardar la plantilla SMS
   const saveTemplate = async () => {
