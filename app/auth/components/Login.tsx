@@ -9,8 +9,11 @@ import useUserStore from '@/stores/userStore';
 const LoginComponent = () => {
   const router = useRouter();
 
-  const [username, setUsername] = useState("gaston.isnardi@cloudhesive.com");
-  const [password, setPassword] = useState("Be482e1fd2@");
+  // gaston.isnardi@cloudhesive.com
+  // Be482e1fd2@
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
