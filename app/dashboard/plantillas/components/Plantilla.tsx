@@ -41,7 +41,7 @@ const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
           >
             Guardar Template
           </button>
-          {templateToEdit?.id && 
+          {/* {templateToEdit?.id && 
            <button
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={duplicateTemplate}
@@ -49,7 +49,7 @@ const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
           >
             Duplicar Template
           </button>
-          }
+          } */} // TODO DESCOMENTAR
         </div>
 
         {/* Formulario de guardar template */}
