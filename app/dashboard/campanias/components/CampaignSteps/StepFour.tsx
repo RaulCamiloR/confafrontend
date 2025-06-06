@@ -62,8 +62,8 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
     const newCampaign = {
       name: campaign.name,
       type: campaign.type,
-      templateName: campaign.template?.name,
-      segmentName: campaign.segment?.label,
+      templateId: campaign.template?.id,
+      segmentId: campaign.segment?.segmentId,
     };
 
     // Log detallado de la campaña antes de enviar
@@ -195,7 +195,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
               </p>
             )}
           </div>
-        </div> */} // TODO DESCOMENTAR
+        </div> TODO DESCOMENTAR */}
 
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
