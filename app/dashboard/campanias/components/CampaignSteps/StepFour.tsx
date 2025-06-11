@@ -154,12 +154,18 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </span>
               )}
             </p>
-            {/*campaign.type === "EMAIL" && (
-              <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Email de remitente:</span>{" "}
-                {campaign.email}
-              </p>
-            )*/}
+            {/* Mostrar información específica de EMAIL */}
+            {campaign.type === "EMAIL" && (
+              <>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Asunto:</span> {campaign.subject}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Email de remitente:</span>{" "}
+                  {campaign.senderEmail}@confa.co
+                </p>
+              </>
+            )}
           </div>
         </div>
 

@@ -30,6 +30,9 @@ export type SchedulingType = 'instantanea' | 'programar';
 export interface Campaign {
   name: string;
   email: string;
+  // Nuevos campos para campañas de email
+  subject: string;
+  senderEmail: string;
   contact: Contact | null;
   segment: Segment | null;
   template: Template | null;
@@ -51,6 +54,8 @@ export const CHANNEL_TYPES: CampaignType[] = ['EMAIL', 'SMS', 'VOICE'];
 const initialCampaign: Campaign = {
   name: '',
   email: '',
+  subject: '',
+  senderEmail: '',
   contact: null,
   segment: null,
   template: null,
