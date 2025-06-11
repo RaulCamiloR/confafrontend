@@ -8,11 +8,19 @@ import { FaSyncAlt, FaSignOutAlt } from "react-icons/fa";
 import { HiOutlineDocumentDownload } from "react-icons/hi";
 import ReportTable from "./ReportTable";
 import Image from "next/image";
+import Link from "next/link";
+import { MdArrowBack } from "react-icons/md";
 
 interface ReportsProps {
   accessToken: string;
   refreshToken: string;
   idToken: string;
+}
+
+interface Column {
+  field: string;
+  label: string;
+  fixed?: boolean;
 }
 
 // Definir tipos para los datos
@@ -33,62 +41,31 @@ const Reports: React.FC<ReportsProps> = ({ accessToken, refreshToken, idToken })
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    localStorage.setItem("token", accessToken);
-    fetchData(currentPage);
-  }, [currentPage, activeTab, accessToken]);
-
-  const fetchData = async (page: number) => {
-    setIsRefreshing(true);
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 300);
-
-    setLastPaginationKey(null);
-    const tableParam = activeTab === "callbacks" ? "TABLE_CALLBACK" : "TABLE_SURVEY";
-    try {
-      let url = `https://wdba5ur6id.execute-api.us-east-1.amazonaws.com/prod/fetch-data?table=${tableParam}&lastEvaluatedKey=${lastPaginationKey || ""}`;
-      const response = await fetch(
-        url,
-        {
-          method: "GET",
-          headers: { "Authorization": `Bearer ${accessToken}` },
-        }
-      );
-
-      if (response.status === 401 || response.status === 404) {
-        //setErrorFetchData(true);
-      } else {
-        const responseData = await response.json();
-        setData(responseData.items);
-        setItemsCountTable(responseData.itemCount || 50);
-        setItems(responseData.items.length);
-
-        if (responseData.lastEvaluatedKey) {
-          setPaginationKeys((prevKeys) => ({ ...prevKeys, [page]: responseData.lastEvaluatedKey }));
-          setLastPaginationKey(responseData.lastEvaluatedKey);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setTimeout(() => setIsRefreshing(false), 500);
-    }
-  };
-
-  const switchTab = (tab: string) => {
-    if (activeTab !== tab) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setActiveTab(tab);
-        setIsTransitioning(false);
-        setLastPaginationKey(null);
-        handlePageChange(1);
-      }, 300); // Duración de la animación
-    }
-  };
+  const columns: Column[] = activeTab === "callbacks"
+    ? [
+        //{ field: "contact_id", label: "ID Contacto", fixed: true },
+        { field: "estado", label: "Estado" },
+        { field: "fecha_devolucion", label: "Fecha Devolución" },
+        { field: "hora_devolucion", label: "Hora Devolución" },
+        { field: "fecha_generacion", label: "Fecha Generación" },
+        { field: "hora_generacion", label: "Hora Generación" },
+        { field: "intentos", label: "Intentos" },
+        { field: "nro_doc", label: "Nro Documento" },
+        { field: "tipo_doc", label: "Tipo Documento" },
+        { field: "servicio", label: "Servicio" }
+      ]
+    : [
+        //{ field: "PK", label: "ID Contacto", fixed: true },
+        { field: "agente", label: "Agente" },
+        { field: "cola", label: "Cola" },
+        { field: "nroDoc", label: "Documento" },
+        { field: "tipoDoc", label: "Tipo Documento" },
+        { field: "fecha", label: "Fecha" },
+        { field: "hora", label: "Hora" },
+        { field: "ntel", label: "N° Teléfono" },
+        { field: "respuesta_1", label: "Respuesta 1" },
+        { field: "respuesta_2", label: "Respuesta 2" }
+      ];
 
   const handlePageChange = (page: number) => {
     if (page >= 1) {
@@ -129,10 +106,10 @@ const Reports: React.FC<ReportsProps> = ({ accessToken, refreshToken, idToken })
     document.body.removeChild(a);
   };
 
-  const handleDownloadTable = async () => {
+  const handleDownloadTable = async (tab:string) => {
     try {
       console.log("Download Table CSV");
-      let tableParam = activeTab === "callbacks" ? "TABLE_CALLBACK" : "TABLE_SURVEY";
+      let tableParam = tab === "callbacks" ? "TABLE_CALLBACK" : "TABLE_SURVEY";
       let url = `https://wdba5ur6id.execute-api.us-east-1.amazonaws.com/prod/fetch-all-items?table=${tableParam}`;
       const response = await fetch(url, {
         method: "GET",
@@ -153,6 +130,43 @@ const Reports: React.FC<ReportsProps> = ({ accessToken, refreshToken, idToken })
       console.error("Error downloading table:", error);
     }
   };
+
+  const tabs = [
+  {
+    key: "callbacks",
+    label: "Callbacks",
+    endpoint: `https://wdba5ur6id.execute-api.us-east-1.amazonaws.com/prod/fetch-data?table=TABLE_CALLBACK&lastEvaluatedKey=`,
+    columns: [
+      //{ field: "contact_id", label: "ID Contacto", fixed: true },
+      { key: "estado", label: "Estado" },
+      { key: "fecha_devolucion", label: "Fecha Devolución" },
+      { key: "hora_devolucion", label: "Hora Devolución" },
+      { key: "fecha_generacion", label: "Fecha Generación" },
+      { key: "hora_generacion", label: "Hora Generación" },
+      { key: "intentos", label: "Intentos" },
+      { key: "nro_doc", label: "Nro Documento" },
+      { key: "tipo_doc", label: "Tipo Documento" },
+      { key: "servicio", label: "Servicio" }
+    ]
+  },
+  {
+    key: "surveys",
+    label: "Encuestas",
+    endpoint: `https://wdba5ur6id.execute-api.us-east-1.amazonaws.com/prod/fetch-data?table=TABLE_SURVEY&lastEvaluatedKey=`,
+    columns: [
+      //{ field: "PK", label: "ID Contacto", fixed: true },
+      { key: "agente", label: "Agente" },
+      { key: "cola", label: "Cola" },
+      { key: "nroDoc", label: "Documento" },
+      { key: "tipoDoc", label: "Tipo Documento" },
+      { key: "fecha", label: "Fecha" },
+      { key: "hora", label: "Hora" },
+      { key: "ntel", label: "N° Teléfono" },
+      { key: "respuesta_1", label: "Respuesta 1" },
+      { key: "respuesta_2", label: "Respuesta 2" }
+    ]
+  }
+];
 
   const convertToCSV = (data: any[]) => {
     if (!data || data.length === 0) return "";
@@ -187,32 +201,35 @@ const Reports: React.FC<ReportsProps> = ({ accessToken, refreshToken, idToken })
     return (
       <div className="reports-page">
         <Image src="/images/confalogo.png" alt="Logo Confa" className="logo" width={180} height={60} />
+       <div className="header-container">
+        <Link
+          href="/"
+          className="flex items-left justify-center space-x-2 text-white bg-orange-500 hover:bg-orange-200 px-6 py-2 rounded-lg transition-colors w-48"
+        >
+          <MdArrowBack className="text-xl" />
+          <span>Volver</span>
+        </Link>
+        </div>  
         
-        <div className="header-container">
-          <div className="tabs">
-            <span className={activeTab === "callbacks" ? "active-tab" : ""} onClick={() => switchTab("callbacks")}>
-              Callbacks
-            </span>
-            <span className={activeTab === "surveys" ? "active-tab" : ""} onClick={() => switchTab("surveys")}>
-              Encuestas
-            </span>
-          </div>
-          <div className="header-icons">
-            <FaSyncAlt className={`refresh-icon ${isRefreshing ? "rotating" : ""}`} onClick={() => { setCurrentPage(1); fetchData(1); }} />
-            <FaSignOutAlt size={22} className="logout-icon" onClick={() => {
-              localStorage.removeItem("token");
-              router.push("/");
-            }} />
-          </div>
-        </div>
-        <hr className="divider" />
-        <div className={`table-container ${isTransitioning ? "fade-out" : "fade-in"}`}>
-          <div className="table-title">
-            <p className="items-count">Ítems: {items}</p>
-            <button className={!showDownloadMenu ? "download-container" : "download-container-dropdown-open"} onClick={() => setShowDownloadMenu(!showDownloadMenu)}>
-              <HiOutlineDocumentDownload size={22} color="white" className="download-button" />
-              <span className="textDownload">Descargar</span>
+          <ReportTable accessToken={accessToken} tabs={tabs} onDownload={handleDownloadTable} refreshButton={true} downloadButton={true}/>
+        
+        <div className="pagination">
+          <button onClick={() => itemsCountTable > 50 ? handlePageChange(currentPage - 1) : null} disabled={currentPage === 1}>{"<"}</button>
+          {generatePagination().map((page, index) => (
+            <button key={index} className={page === currentPage ? "active-page" : ""} onClick={() => typeof page === "number" && handlePageChange(page)}>
+              {page}
             </button>
+          ))}
+          <button onClick={() => itemsCountTable > 50 ? handlePageChange(currentPage + 1) : null} disabled={!paginationKeys[currentPage]}>{">"}</button>
+        </div>
+      </div>
+    );
+  }
+};
+
+export default Reports;
+/*
+     <div className="table-title">
             {showDownloadMenu && (
                 <div className="dropdown-menu">
                   <li className="dropdown-option" style={{ "--i": 0 } as React.CSSProperties} onClick={(e) => {
@@ -230,20 +247,5 @@ const Reports: React.FC<ReportsProps> = ({ accessToken, refreshToken, idToken })
                 </div>
               )}
           </div>
-          <ReportTable data={data} activeTab={activeTab} />
-        </div>
-        <div className="pagination">
-          <button onClick={() => itemsCountTable > 50 ? handlePageChange(currentPage - 1) : null} disabled={currentPage === 1}>{"<"}</button>
-          {generatePagination().map((page, index) => (
-            <button key={index} className={page === currentPage ? "active-page" : ""} onClick={() => typeof page === "number" && handlePageChange(page)}>
-              {page}
-            </button>
-          ))}
-          <button onClick={() => itemsCountTable > 50 ? handlePageChange(currentPage + 1) : null} disabled={!paginationKeys[currentPage]}>{">"}</button>
-        </div>
-      </div>
-    );
-  }
-};
 
-export default Reports;
+          */
