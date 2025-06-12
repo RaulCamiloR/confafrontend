@@ -63,38 +63,8 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
       name: campaign.name,
       type: campaign.type,
       templateId: campaign.template?.id,
-      segmentId: campaign.segment?.segmentId,
+      segmentId: campaign.segment?.segmentId
     };
-
-    // Log detallado de la campaña antes de enviar
-    console.log("=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===");
-    console.log("Información básica:", {
-      nombre: campaign.name,
-      tipo: campaign.type,
-      emailRemitente: campaign.email || "N/A",
-    });
-
-    console.log("Información del segmento:", {
-      nombre: campaign.segment?.label || "Sin segmento",
-      id: campaign.segment?.value || "N/A",
-      creado: campaign.segment?.createdAt || "N/A",
-      estado: campaign.segment?.status || "N/A",
-      registrosProcesados: campaign.segment?.recordsProcessed || "N/A",
-    });
-
-    console.log(
-      "Información de la plantilla:",
-      campaign.type === "VOICE"
-        ? "No aplica - Campaña de VOICE"
-        : {
-            nombre: campaign.template?.name || "Sin plantilla",
-            creada: campaign.template?.createdAt || "N/A",
-            esPlantillaBackend: campaign.template?.isBackendTemplate || false,
-          },
-    );
-
-    console.log("Objeto final a enviar:", newCampaign);
-    console.log("=====================================");
 
     try {
       const { data } = await axios.post("/api/campaigns", { ...newCampaign });
