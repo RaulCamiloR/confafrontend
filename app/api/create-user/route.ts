@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   
-  const { email, name, lastName, rol, password, area } = await request.json();
+  const { email, name, lastName, rol, password } = await request.json();
 
-  console.log({ email, name, lastName, rol, password, area });
+  console.log({ email, name, lastName, rol, password });
 
   try {
     const response = await fetch(
@@ -16,8 +16,7 @@ export async function POST(request: Request) {
             name, 
             lastName, 
             roleName: rol, 
-            password, 
-            areaName: area,
+            password,
         }),
         headers: {
           "Content-Type": "application/json",

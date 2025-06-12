@@ -6,7 +6,6 @@ interface UsuarioProps {
   nombre: string;
   apellido: string;
   email: string;
-  area: string;
   rol: string;
   onEdit?: (usuario: UsuarioProps) => void;
 }
@@ -22,13 +21,13 @@ const getRolColor = (rol: string) => {
   }
 };
 
-export default function Usuario({ nombre, apellido, email, area, rol, onEdit }: UsuarioProps) {
+export default function Usuario({ nombre, apellido, email, rol, onEdit }: UsuarioProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleEditClick = () => {
     if (onEdit) {
-      onEdit({ nombre, apellido, email, area, rol });
+      onEdit({ nombre, apellido, email, rol });
     }
   };
 
@@ -92,10 +91,6 @@ export default function Usuario({ nombre, apellido, email, area, rol, onEdit }: 
           <div className="flex items-center space-x-3 text-sm text-gray-600">
             <MdEmail className="text-lg text-gray-400" />
             <span className="truncate">{email}</span>
-          </div>
-          <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <MdLocationOn className="text-lg text-gray-400" />
-            <span>Area: {area}</span>
           </div>
           <div className="flex items-center space-x-3 text-sm text-gray-600">
             <MdSecurity className="text-lg text-gray-400" />

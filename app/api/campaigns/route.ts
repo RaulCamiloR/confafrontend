@@ -45,8 +45,8 @@ export async function GET(request: Request) {
 }
 export async function POST(request: Request) {
   try {
-    const { name, type, templateId, segmentId } = await request.json();
-
+    const { name, type, templateId, segmentId, domain, subject, scheduleAt } = await request.json();
+    console.log(scheduleAt)
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/campaign/${type}`,
       {
@@ -61,6 +61,9 @@ export async function POST(request: Request) {
           type,
           templateId,
           segmentId,
+          domain,
+          subject,
+          scheduleAt
         }),
       },
     );

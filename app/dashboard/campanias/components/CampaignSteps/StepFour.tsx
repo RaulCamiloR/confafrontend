@@ -47,6 +47,27 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
     return phone.replace(/(\+\d{1,3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
   };
 
+  const convertToUTCKeepingHour=(dateString) => {
+  // Parse the original date string
+  const originalDate = new Date(dateString);
+  
+  // Extract the hour from the original date
+  const hour = originalDate.getHours();
+  
+  // Create a new UTC date with the same year, month, day, and hour
+  const utcDate = new Date(Date.UTC(
+    originalDate.getFullYear(),
+    originalDate.getMonth(),
+    originalDate.getDate(),
+    hour,
+    originalDate.getMinutes(),
+    originalDate.getSeconds(),
+    originalDate.getMilliseconds()
+  ));
+  
+  return utcDate;
+}
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return (
@@ -58,13 +79,20 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
 
   const handleSubmit = async () => {
     setIsSending(true);
-
+    
+    console.log("campaign: ", campaign)
+    // const utcDate = campaign.scheduledDate ? convertToUTCKeepingHour(campaign.scheduledDate) : null
     const newCampaign = {
       name: campaign.name,
       type: campaign.type,
       templateId: campaign.template?.id,
       segmentId: campaign.segment?.segmentId,
+      domain: campaign.senderEmail,
+      subject: campaign.subject,
+      scheduleAt: campaign.scheduledDate
     };
+
+    console.log("newCampaign: ", newCampaign)
 
     // Log detallado de la campaña antes de enviar
     console.log("=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===");
@@ -169,7 +197,7 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
           </div>
         </div>
 
-        {/* <div>
+        <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Programación de la Campaña
           </h4>
@@ -191,17 +219,19 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 <span className="font-medium">Fecha programada:</span>{" "}
                 <span className="inline-flex items-center">
                   <FiCalendar className="mr-1" />
-                  {new Date(campaign.scheduledDate).toLocaleDateString('es-ES', {
+                  {new Date(campaign.scheduledDate).toLocaleString('es-ES', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </span>
               </p>
             )}
           </div>
-        </div> TODO DESCOMENTAR */}
+        </div>
 
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

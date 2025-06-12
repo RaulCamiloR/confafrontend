@@ -9,8 +9,15 @@ interface UsuarioData {
   nombre: string;
   apellido: string;
   email: string;
-  area: string;
   rol: string;
+}
+
+interface ApiRole {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ModalUsuarioProps {
@@ -25,9 +32,34 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
   // Estados para la edición
   const [selectedNombre, setSelectedNombre] = useState('');
   const [selectedApellido, setSelectedApellido] = useState('');
-  const [selectedArea, setSelectedArea] = useState('');
   const [selectedRol, setSelectedRol] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiRoles, setApiRoles] = useState<ApiRole[]>([]);
+  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+
+  // Llamada GET a /api/get-roles cuando se abre el modal
+  useEffect(() => {
+    if (isOpen) {
+      const fetchRoles = async () => {
+        try {
+          setIsLoadingRoles(true);
+          const response = await axios.get('/api/get-roles');
+          console.log('🔍 Resultado de /api/get-roles:', response.data);
+          
+          // Guardar los roles en el estado
+          if (response.data && response.data.roles) {
+            setApiRoles(response.data.roles);
+          }
+        } catch (error) {
+          console.error('❌ Error al obtener roles:', error);
+        } finally {
+          setIsLoadingRoles(false);
+        }
+      };
+
+      fetchRoles();
+    }
+  }, [isOpen]);
 
   // useEffect para cargar los datos del usuario
   useEffect(() => {
@@ -35,7 +67,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
       console.log('📝 Cargando datos para editar:', usuarioData);
       setSelectedNombre(usuarioData.nombre);
       setSelectedApellido(usuarioData.apellido);
-      setSelectedArea(usuarioData.area);
       setSelectedRol(usuarioData.rol);
     }
   }, [usuarioData]);
@@ -44,7 +75,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
     // Resetear estados al cerrar
     setSelectedNombre(usuarioData.nombre);
     setSelectedApellido(usuarioData.apellido);
-    setSelectedArea(usuarioData.area);
     setSelectedRol(usuarioData.rol);
     onClose();
   };
@@ -57,12 +87,9 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
     setSelectedApellido(e.target.value);
   };
 
-  const handleAreaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedArea(e.target.value);
-  };
-
   const handleRolChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRol(e.target.value);
+    const { name, value } = e.target;
+    setSelectedRol(value);
   };
 
   const handleEnviar = async() => {
@@ -74,7 +101,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
       
       const response = await axios.post('/api/edit-user', {
         email: usuarioData.email,
-        area: selectedArea,
         rol: selectedRol,
         name: selectedNombre,
         lastName: selectedApellido
@@ -161,25 +187,6 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
               </div>
             </div>
 
-            {/* Área - Dropdown */}
-            <div className="flex items-center space-x-3">
-              <MdBusiness className="text-lg text-orange-500" />
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 mb-1">Área</p>
-                <select
-                  value={selectedArea}
-                  onChange={handleAreaChange}
-                  className="w-full px-2 py-1 border border-gray-300 rounded text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                >
-                  {areas.map((area) => (
-                    <option key={area} value={area}>
-                      {area}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             {/* Rol - Dropdown */}
             <div className="flex items-center space-x-3">
               <MdSecurity className="text-lg text-orange-500" />
@@ -189,12 +196,16 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
                   value={selectedRol}
                   onChange={handleRolChange}
                   className="w-full px-2 py-1 border border-gray-300 rounded text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  disabled={isLoadingRoles}
                 >
-                  {roles.map((rol) => (
-                    <option key={rol} value={rol}>
-                      {rol}
-                    </option>
-                  ))}
+                <option value="">
+                  {isLoadingRoles ? "Cargando roles..." : "Selecciona un rol"}
+                </option>
+                {apiRoles.map((rol) => (
+                  <option key={rol.id} value={rol.name}>
+                    {rol.name}
+                  </option>
+                ))}
                 </select>
               </div>
             </div>
@@ -215,7 +226,7 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
             </button>
             <button
               onClick={handleEnviar}
-              disabled={isLoading}
+              disabled={isLoading || isLoadingRoles}
               className={`flex-1 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 ${
                 isLoading 
                   ? 'bg-orange-400 cursor-not-allowed' 
@@ -224,11 +235,22 @@ export default function ModalUsuario({ isOpen, onClose, usuarioData }: ModalUsua
             >
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Guardando...</span>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Guardando...
+                </>
+              ) : isLoadingRoles ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Cargando roles...
                 </>
               ) : (
-                <span>Guardar</span>
+                'Editar Usuario'
               )}
             </button>
           </div>

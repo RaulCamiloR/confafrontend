@@ -61,7 +61,7 @@ const initialCampaign: Campaign = {
   template: null,
   type: 'EMAIL',
   schedulingType: 'instantanea',
-  scheduledDate: null
+  scheduledDate: new Date()
 }
 
 const CampaignContext = createContext<CampaignContextType | undefined>(undefined)
