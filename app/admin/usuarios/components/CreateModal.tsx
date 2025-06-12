@@ -14,7 +14,6 @@ interface FormData {
   name: string;
   lastName: string;
   email: string;
-  area: string;
   rol: string;
   password: string;
 }
@@ -32,7 +31,6 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
     name: '',
     lastName: '',
     email: '',
-    area: '',
     rol: '',
     password: ''
   });
@@ -77,7 +75,7 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
     e.preventDefault();
     
     // Validación básica
-    if (!formData.name || !formData.lastName || !formData.email || !formData.area || !formData.rol || !formData.password) {
+    if (!formData.name || !formData.lastName || !formData.email || !formData.rol || !formData.password) {
       alert('Por favor completa todos los campos');
       return;
     }
@@ -107,7 +105,6 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
         name: '',
         lastName: '',
         email: '',
-        area: '',
         rol: '',
         password: ''
       });
@@ -133,7 +130,6 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
       name: '',
       lastName: '',
       email: '',
-      area: '',
       rol: '',
       password: ''
     });
@@ -224,28 +220,6 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
               placeholder="Contraseña"
               required
             />
-          </div>
-
-          {/* Área */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              <MdBusiness className="inline mr-2 text-gray-400" />
-              Área
-            </label>
-            <select
-              name="area"
-              value={formData.area}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-              required
-            >
-              <option value="">Selecciona un área</option>
-              {areas.map((area) => (
-                <option key={area} value={area}>
-                  {area}
-                </option>
-              ))}
-            </select>
           </div>
 
           {/* Rol */}

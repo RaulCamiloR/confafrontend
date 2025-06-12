@@ -12,7 +12,6 @@ interface Usuario {
   nombre: string;
   apellido: string;
   email: string;
-  area: string;
   rol: string;
 }
 
@@ -50,7 +49,6 @@ export default function UsuariosPage() {
             nombre: user.name,
             apellido: user.lastName,
             email: user.email,
-            area: user.areaName || "No especificada", 
             rol: user.role?.name || "Usuario"
           }));
           
@@ -145,7 +143,6 @@ export default function UsuariosPage() {
                 nombre={usuario.nombre}
                 apellido={usuario.apellido}
                 email={usuario.email}
-                area={usuario.area}
                 rol={usuario.rol}
                 onEdit={handleEditUser}
               />

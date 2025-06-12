@@ -6,6 +6,7 @@ import {
   SchedulingType,
 } from "@/app/dashboard/campanias/contexts/CampaignContext";
 import { FiClock, FiZap, FiCalendar } from "react-icons/fi";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 interface StepZeroProps {
   onNext: () => void;
@@ -45,14 +46,13 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
     updateCampaign({ 
       schedulingType: type,
       // Si cambia a instantánea, limpiar la fecha
-      scheduledDate: type === 'instantanea' ? null : campaign.scheduledDate
+      scheduledDate: type === 'instantanea' ? new Date() : campaign.scheduledDate
     });
     setErrors({});
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value ? new Date(e.target.value) : null;
-    
+    const selectedDate = e.target.value ? new Date(e.target.value + "T12:00:00.000Z") : null;
     // Si hay una fecha existente con hora, mantener la hora
     if (selectedDate && campaign.scheduledDate) {
       const existingDate = new Date(campaign.scheduledDate);
@@ -83,7 +83,9 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
   // Formatear fecha para el input (YYYY-MM-DD)
   const formatDateForInput = (date: Date | null) => {
     if (!date) return '';
-    return date.toISOString().split('T')[0];
+    const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+    const localDate = new Date(date.getTime() - offsetMs);
+    return localDate.toISOString().split('T')[0];
   };
 
   // Formatear hora para el input (HH:MM)
