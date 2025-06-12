@@ -80,7 +80,6 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
   const handleSubmit = async () => {
     setIsSending(true);
     
-    console.log("campaign: ", campaign)
     // const utcDate = campaign.scheduledDate ? convertToUTCKeepingHour(campaign.scheduledDate) : null
     const newCampaign = {
       name: campaign.name,
@@ -91,38 +90,6 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
       subject: campaign.subject,
       scheduleAt: campaign.scheduledDate
     };
-
-    console.log("newCampaign: ", newCampaign)
-
-    // Log detallado de la campaña antes de enviar
-    console.log("=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===");
-    console.log("Información básica:", {
-      nombre: campaign.name,
-      tipo: campaign.type,
-      emailRemitente: campaign.email || "N/A",
-    });
-
-    console.log("Información del segmento:", {
-      nombre: campaign.segment?.label || "Sin segmento",
-      id: campaign.segment?.value || "N/A",
-      creado: campaign.segment?.createdAt || "N/A",
-      estado: campaign.segment?.status || "N/A",
-      registrosProcesados: campaign.segment?.recordsProcessed || "N/A",
-    });
-
-    console.log(
-      "Información de la plantilla:",
-      campaign.type === "VOICE"
-        ? "No aplica - Campaña de VOICE"
-        : {
-            nombre: campaign.template?.name || "Sin plantilla",
-            creada: campaign.template?.createdAt || "N/A",
-            esPlantillaBackend: campaign.template?.isBackendTemplate || false,
-          },
-    );
-
-    console.log("Objeto final a enviar:", newCampaign);
-    console.log("=====================================");
 
     try {
       const { data } = await axios.post("/api/campaigns", { ...newCampaign });

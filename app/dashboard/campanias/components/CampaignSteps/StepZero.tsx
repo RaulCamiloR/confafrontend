@@ -52,13 +52,10 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("DATE RAW:",e.target.value )
     const selectedDate = e.target.value ? new Date(e.target.value + "T12:00:00.000Z") : null;
-    console.log("selectedDate:",selectedDate )
     // Si hay una fecha existente con hora, mantener la hora
     if (selectedDate && campaign.scheduledDate) {
       const existingDate = new Date(campaign.scheduledDate);
-      console.log("existingDate:",existingDate )
       selectedDate.setHours(existingDate.getHours(), existingDate.getMinutes());
     }
     
@@ -86,10 +83,8 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
   // Formatear fecha para el input (YYYY-MM-DD)
   const formatDateForInput = (date: Date | null) => {
     if (!date) return '';
-    console.log('date', date)
     const offsetMs = date.getTimezoneOffset() * 60 * 1000;
     const localDate = new Date(date.getTime() - offsetMs);
-    console.log('DATE', localDate.toISOString().split('T')[0])
     return localDate.toISOString().split('T')[0];
   };
 
