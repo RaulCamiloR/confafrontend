@@ -12,8 +12,8 @@ const LoginComponent = () => {
   // gaston.isnardi@cloudhesive.com
   // Be482e1fd2@
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("gaston.isnardi@cloudhesive.com");
+  const [password, setPassword] = useState("Be482e1fd2@");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
