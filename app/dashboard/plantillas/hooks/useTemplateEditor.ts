@@ -41,7 +41,50 @@ export const useTemplateEditor = ({
       URL.revokeObjectURL(url);
     });
   };
+  const duplicateTemplateFromList = async (template) => {
+    if (isProcessing) return;
 
+    setIsProcessing(true);
+
+    const params = {
+      templateName: `${template.name} (Copia)`,
+      content: template.html,
+      jsonTemplate: template.design,
+      channel: template.type || "EMAIL",
+    };
+
+    try {
+      const { data } = await axios.post("/api/templates", params);
+
+      console.log({ data });
+
+      setNotification({
+        message: "¡Template duplicado exitosamente!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+        setIsProcessing(false);
+      }, 3000);
+      return true
+    } catch (error:any) {
+      //console.error("Error al duplicar el template:", error);
+
+      let errorMsg = "Error al duplicar el template";
+
+      if (error?.status === 400) {
+        errorMsg = `Ya existe un template con el nombre "${params.templateName}".`;
+      }
+
+      setNotification({ message: errorMsg, type: "error" });
+      setTimeout(() => {
+        setNotification(null);
+        setIsProcessing(false);
+      }, 3000);
+      return false
+    }
+  };
   const duplicateTemplate = async () => {
     if (isProcessing) return;
 
@@ -242,5 +285,6 @@ export const useTemplateEditor = ({
     handleTemplateNameChange,
     toggleSaveForm,
     cancelSaveForm,
+    duplicateTemplateFromList
   };
 };

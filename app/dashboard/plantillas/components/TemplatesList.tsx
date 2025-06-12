@@ -173,6 +173,7 @@ const TemplatesList: React.FC<TemplatesListProps> = ({
 
             return (
               <SingleTemplate
+              fetchTemplates={fetchTemplates}
                 key={
                   template.Id ||
                   template.id ||
