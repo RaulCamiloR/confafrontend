@@ -47,6 +47,27 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
     return phone.replace(/(\+\d{1,3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
   };
 
+  const convertToUTCKeepingHour=(dateString) => {
+  // Parse the original date string
+  const originalDate = new Date(dateString);
+  
+  // Extract the hour from the original date
+  const hour = originalDate.getHours();
+  
+  // Create a new UTC date with the same year, month, day, and hour
+  const utcDate = new Date(Date.UTC(
+    originalDate.getFullYear(),
+    originalDate.getMonth(),
+    originalDate.getDate(),
+    hour,
+    originalDate.getMinutes(),
+    originalDate.getSeconds(),
+    originalDate.getMilliseconds()
+  ));
+  
+  return utcDate;
+}
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return (
@@ -58,43 +79,17 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
 
   const handleSubmit = async () => {
     setIsSending(true);
-
+    
+    // const utcDate = campaign.scheduledDate ? convertToUTCKeepingHour(campaign.scheduledDate) : null
     const newCampaign = {
       name: campaign.name,
       type: campaign.type,
       templateId: campaign.template?.id,
       segmentId: campaign.segment?.segmentId,
+      domain: campaign.senderEmail,
+      subject: campaign.subject,
+      scheduleAt: campaign.scheduledDate
     };
-
-    // Log detallado de la campaña antes de enviar
-    console.log("=== DETALLES DE LA CAMPAÑA ANTES DE ENVIAR ===");
-    console.log("Información básica:", {
-      nombre: campaign.name,
-      tipo: campaign.type,
-      emailRemitente: campaign.email || "N/A",
-    });
-
-    console.log("Información del segmento:", {
-      nombre: campaign.segment?.label || "Sin segmento",
-      id: campaign.segment?.value || "N/A",
-      creado: campaign.segment?.createdAt || "N/A",
-      estado: campaign.segment?.status || "N/A",
-      registrosProcesados: campaign.segment?.recordsProcessed || "N/A",
-    });
-
-    console.log(
-      "Información de la plantilla:",
-      campaign.type === "VOICE"
-        ? "No aplica - Campaña de VOICE"
-        : {
-            nombre: campaign.template?.name || "Sin plantilla",
-            creada: campaign.template?.createdAt || "N/A",
-            esPlantillaBackend: campaign.template?.isBackendTemplate || false,
-          },
-    );
-
-    console.log("Objeto final a enviar:", newCampaign);
-    console.log("=====================================");
 
     try {
       const { data } = await axios.post("/api/campaigns", { ...newCampaign });
@@ -154,16 +149,22 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </span>
               )}
             </p>
-            {/*campaign.type === "EMAIL" && (
-              <p className="text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Email de remitente:</span>{" "}
-                {campaign.email}
-              </p>
-            )*/}
+            {/* Mostrar información específica de EMAIL */}
+            {campaign.type === "EMAIL" && (
+              <>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Asunto:</span> {campaign.subject}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">Email de remitente:</span>{" "}
+                  {campaign.senderEmail}@confa.co
+                </p>
+              </>
+            )}
           </div>
         </div>
 
-        {/* <div>
+        <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Programación de la Campaña
           </h4>
@@ -185,17 +186,19 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 <span className="font-medium">Fecha programada:</span>{" "}
                 <span className="inline-flex items-center">
                   <FiCalendar className="mr-1" />
-                  {new Date(campaign.scheduledDate).toLocaleDateString('es-ES', {
+                  {new Date(campaign.scheduledDate).toLocaleString('es-ES', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </span>
               </p>
             )}
           </div>
-        </div> TODO DESCOMENTAR */}
+        </div>
 
         <div>
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

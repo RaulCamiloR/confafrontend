@@ -19,23 +19,35 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
     useCampaignPermissions();
 
   const { campaign, updateCampaign } = useCampaign();
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+  const [errors, setErrors] = useState<{ 
+    name?: string; 
+    subject?: string; 
+    senderEmail?: string;
+  }>({});
 
   const handleNext = () => {
-    const newErrors: { name?: string; email?: string } = {};
+    const newErrors: { 
+      name?: string; 
+      subject?: string; 
+      senderEmail?: string;
+    } = {};
 
     if (!campaign.name.trim()) {
       newErrors.name = "El nombre de la campaña es obligatorio";
     }
 
-    // // Solo validar email si el tipo de campaña es 'EMAIL'
-    // if (campaign.type === 'EMAIL') {
-    //   if (!campaign.email.trim()) {
-    //     newErrors.email = 'El email es obligatorio'
-    //   } else if (!/^\S+@\S+\.\S+$/.test(campaign.email)) {
-    //     newErrors.email = 'Email inválido'
-    //   }
-    // }
+    // Validaciones específicas para campañas de EMAIL
+    if (campaign.type === 'EMAIL') {
+      if (!campaign.subject.trim()) {
+        newErrors.subject = 'El asunto es obligatorio';
+      }
+      
+      if (!campaign.senderEmail.trim()) {
+        newErrors.senderEmail = 'El email es obligatorio';
+      } else if (!/^[a-zA-Z0-9._-]+$/.test(campaign.senderEmail)) {
+        newErrors.senderEmail = 'El email debe contener solo letras, números, puntos, guiones y guiones bajos';
+      }
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -47,6 +59,15 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
 
   const handleTypeChange = (type: CampaignType) => {
     updateCampaign({ type });
+    // Limpiar errores al cambiar de tipo
+    setErrors({});
+  };
+
+  const handleSenderEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Solo permitir caracteres válidos para la parte antes del @
+    const sanitizedValue = value.replace(/[^a-zA-Z0-9._-]/g, '');
+    updateCampaign({ senderEmail: sanitizedValue });
   };
 
   // Función para obtener el icono según el tipo de campaña
@@ -125,26 +146,71 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
         </div>
       </div>
 
-      {/*campaign.type === 'EMAIL' && (
-        <div>
-          <label htmlFor="campaign-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Email de Remitente
-          </label>
-          <input
-            type="email"
-            id="campaign-email"
-            value={campaign.email}
-            onChange={(e) => updateCampaign({ email: e.target.value })}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              errors.email ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
-            }`}
-            placeholder="Ej: marketing@tuempresa.com"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-          )}
+      {/* Campos específicos para campañas de EMAIL */}
+      {campaign.type === 'EMAIL' && (
+        <div className="space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-300 flex items-center">
+            <FiMail className="mr-2" />
+            Configuración de Email
+          </h4>
+          
+          <div>
+            <label 
+              htmlFor="campaign-subject" 
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Asunto
+            </label>
+            <input
+              type="text"
+              id="campaign-subject"
+              value={campaign.subject}
+              onChange={(e) => updateCampaign({ subject: e.target.value })}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                errors.subject
+                  ? "border-red-500 dark:border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              }`}
+              placeholder="Ej: ¡Ofertas especiales de Navidad!"
+            />
+            {errors.subject && (
+              <p className="mt-1 text-sm text-red-500">{errors.subject}</p>
+            )}
+          </div>
+
+          <div>
+            <label 
+              htmlFor="campaign-sender-email" 
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Email de Remitente
+            </label>
+            <div className="flex items-center">
+              <input
+                type="text"
+                id="campaign-sender-email"
+                value={campaign.senderEmail}
+                onChange={handleSenderEmailChange}
+                className={`flex-1 px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                  errors.senderEmail
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                }`}
+                placeholder="marketing"
+              />
+              <span className="px-3 py-2 bg-gray-100 dark:bg-gray-600 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md text-gray-600 dark:text-gray-300 text-sm">
+                @confa.co
+              </span>
+            </div>
+            {errors.senderEmail && (
+              <p className="mt-1 text-sm text-red-500">{errors.senderEmail}</p>
+            )}
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Solo se permiten letras, números, puntos (.), guiones (-) y guiones bajos (_)
+            </p>
+          </div>
         </div>
-      )*/}
+      )}
 
       <div className="flex justify-between pt-4">
         {onPrev && (
