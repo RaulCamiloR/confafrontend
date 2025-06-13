@@ -178,7 +178,7 @@ const { duplicateTemplateFromList,notification } = useTemplateEditor({
               </div>
             )}
 
-            {false ? (
+            {isBackend  ? (
               <button
                 className="p-1 text-gray-500 hover:text-blue-500 dark:text-gray-400"
                 onClick={(e) => {

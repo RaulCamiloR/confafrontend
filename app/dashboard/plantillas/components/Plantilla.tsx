@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EmailEditor from "react-email-editor";
 import { useTemplateEditor } from "@/app/dashboard/plantillas/hooks/useTemplateEditor";
 import { Template } from "../contexts/TemplateContext";
-
+declare global {
+  interface Window {
+    unlayer: any;
+  }
+}
 const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
   const {
     emailEditorRef,
@@ -23,6 +27,43 @@ const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
     defaultContent: templateToEdit?.design,
     name: templateToEdit?.name,
   });
+  const [charCount, setCharCount] = useState<any>(0);
+
+const updateCharCount = () => {
+  const editor = (emailEditorRef.current as any)?.editor;
+  if (!editor || typeof editor.exportHtml !== "function") return;
+  
+  editor.exportHtml((data: any) => {
+    const html = data.html || "";
+    const textOnly = html.replace(/<[^>]*>/g, ""); // eliminar etiquetas HTML
+    const cleanText = textOnly.replace(/\s+/g, " ").trim(); // limpiar espacios extras
+    setCharCount(cleanText.length);
+  });
+};
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    const editor = (emailEditorRef.current as any)?.editor;
+    if (editor) {
+      // Ya lo tenemos, frenamos el polling
+      clearInterval(interval);
+
+      // Delay para asegurar que todo esté montado
+      setTimeout(() => {
+        editor.addEventListener("design:updated", updateCharCount);
+        editor.addEventListener("editor:updated", updateCharCount);
+        updateCharCount(); // primer conteo
+      }, 500);
+    }
+  }, 300);
+
+  return () => {
+    clearInterval(interval); // limpiar si nunca se llegó al editor
+    const editor = (emailEditorRef.current as any)?.editor;
+    editor?.removeEventListener("design:updated", updateCharCount);
+    editor?.removeEventListener("editor:updated", updateCharCount);
+  };
+}, []);
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between items-center p-4 bg-gray-800 relative">
@@ -50,6 +91,9 @@ const Plantilla = ({ templateToEdit }: { templateToEdit?: Template }) => {
             Duplicar Template
           </button>
           } 
+          <div className="px-4 py-2 text-sm text-gray-400">
+            Caracteres actuales: {charCount}
+          </div>
         </div>
 
         {/* Formulario de guardar template */}

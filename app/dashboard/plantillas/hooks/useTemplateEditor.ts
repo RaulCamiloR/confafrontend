@@ -253,6 +253,7 @@ export const useTemplateEditor = ({
     if (defaultContent) {
       unlayer.loadDesign(defaultContent);
     }
+    
   };
 
   const handleTemplateNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
