@@ -13,10 +13,10 @@ import {
 const DashboardPage = async () => {
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-4 min-h-screen pb-30">
-      <div className="w-48 h-48 relative mb-1">
+      <div className="w-250 h-50 relative mb-1">
         <Image
-          src="/images/confa-logo.png"
-          alt="Confa Logo"
+          src="/images/emailLogo.png"
+          alt="Logo"
           fill
           priority
           className="object-contain"

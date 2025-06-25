@@ -42,11 +42,11 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
         newErrors.subject = 'El asunto es obligatorio';
       }
       
-      if (!campaign.senderEmail.trim()) {
-        newErrors.senderEmail = 'El email es obligatorio';
-      } else if (!/^[a-zA-Z0-9._-]+$/.test(campaign.senderEmail)) {
-        newErrors.senderEmail = 'El email debe contener solo letras, números, puntos, guiones y guiones bajos';
-      }
+      // if (!campaign.senderEmail.trim()) {
+      //   newErrors.senderEmail = 'El email es obligatorio';
+      // } else if (!/^[a-zA-Z0-9._-]+$/.test(campaign.senderEmail)) {
+      //   newErrors.senderEmail = 'El email debe contener solo letras, números, puntos, guiones y guiones bajos';
+      // }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -178,7 +178,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label 
               htmlFor="campaign-sender-email" 
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -194,7 +194,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
                 className={`flex-1 px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                   errors.senderEmail
                     ? "border-red-500 dark:border-red-500"
-                    : "border-gray-300 dark:border-gray-600"
+                    : "border-gray-300 dark:border-gray-600"  
                 }`}
                 placeholder="marketing"
               />
@@ -208,7 +208,7 @@ const StepOne: React.FC<StepOneProps> = ({ onNext, onPrev }) => {
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               Solo se permiten letras, números, puntos (.), guiones (-) y guiones bajos (_)
             </p>
-          </div>
+          </div> */}
         </div>
       )}
 

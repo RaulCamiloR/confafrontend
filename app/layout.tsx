@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sistema de Campañas",
+  title: "Gestor de Campañas",
   description: "Sistema de Gestión de Campañas y Contactos",
 };
 

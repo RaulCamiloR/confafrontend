@@ -157,7 +157,8 @@ const StepFour: React.FC<StepFourProps> = ({ onPrev, onClose }) => {
                 </p>
                 <p className="text-gray-600 dark:text-gray-400">
                   <span className="font-medium">Email de remitente:</span>{" "}
-                  {campaign.senderEmail}@confa.co
+                  isnardi.gastone@gmail.com
+                  {/* {campaign.senderEmail}@confa.co */}
                 </p>
               </>
             )}

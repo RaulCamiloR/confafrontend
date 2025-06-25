@@ -55,7 +55,7 @@ const HomePage = async () => {
           {hasCampaignsAccess && (
             <HomeFeature
               title="Campañas"
-              description="Gestiona tus campañas de marketing"
+              description="Gestiona tus campañas"
               icon={MdOutlineCampaign}
               iconColor="text-orange-500"
               href="/dashboard"

@@ -9,11 +9,8 @@ import useUserStore from '@/stores/userStore';
 const LoginComponent = () => {
   const router = useRouter();
 
-  // gaston.isnardi@cloudhesive.com
-  // Be482e1fd2@
-
-  const [username, setUsername] = useState("gaston.isnardi@cloudhesive.com");
-  const [password, setPassword] = useState("Be482e1fd2@");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -74,9 +71,9 @@ const LoginComponent = () => {
     <div className="flex flex-col items-center justify-center bg-[#f8f8f8] min-h-screen">
       <div className="mb-4">
         <Image
-          src="/images/confa-logo.png"
-          alt="Logo Confa"
-          width={180}
+          src="/images/emailLogo.png"
+          alt="Logo"
+          width={350}
           height={70}
           priority
         />

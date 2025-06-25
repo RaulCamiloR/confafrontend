@@ -44,10 +44,9 @@ const Sidebar = () => {
       `}>
         {/* Header with close button for mobile */}
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-bold text-white">Sistema de</h1>
+          <div className="pl-2">
+            <h1 className="text-xl font-bold text-white">Gestor de</h1>
             <h1 className="text-xl font-bold text-white">Campañas</h1>
-            <p className="text-sm text-gray-400 mt-1">Amazon Connect</p>
           </div>
           <button 
             onClick={close}
