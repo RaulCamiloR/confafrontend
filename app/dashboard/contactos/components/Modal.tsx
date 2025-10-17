@@ -15,6 +15,10 @@ interface ModalProps {
   children?: React.ReactNode;
 }
 
+const MAX_CHECK_TIMEOUT = 10000;
+const CHECK_INTERVAL = 500;
+const MAX_CHECK_TIMES = MAX_CHECK_TIMEOUT / CHECK_INTERVAL;
+
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   const { hasEmailPermission, hasSmsPermission, hasVoicePermission } =
     useSegmentPermissions();
@@ -146,6 +150,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         fileType: file?.type,
       });
 
+      const checkUrl = data.data.statusEndpoint;
+
       console.log("URL prefirmada:", data.data.uploadUrl);
 
       const response = await axios.put(data.data.uploadUrl, file, {
@@ -162,10 +168,33 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         throw new Error("Error al subir el archivo");
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      for (let i = 0; i < MAX_CHECK_TIMES; i++) {
+        try {
+          const res = await axios.get(`/api/status-segmento?path=${checkUrl}`);
 
-      setUploadStatus("Archivo subido exitosamente");
-      setCurrentStep(4);
+          if (res.status >= 400) {
+            throw new Error(
+              res.data?.message ??
+                "Error en la llamada de verificacion de estado",
+            );
+          }
+          if (res.data.state !== "INDEXADO") {
+            setUploadStatus(`Estado: ${res.data.state}`);
+          } else {
+            setUploadStatus("Archivo subido exitosamente");
+            setCurrentStep(4);
+            break;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, CHECK_INTERVAL));
+        } catch (error: any) {
+          setUploadStatus("Error en la peticion de consulta.");
+          console.error(error);
+          break;
+        }
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (error) {
       console.error("Error al subir el archivo:", error);
       setUploadStatus(
