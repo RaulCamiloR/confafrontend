@@ -178,7 +178,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
                 "Error en la llamada de verificacion de estado",
             );
           }
-          if (res.data.state !== "INDEXADO") {
+          if (res.data.state === "ERROR") {
+            setUploadStatus(`${res.data.state}: ${res.data.message}`);
+            break;
+          } else if (res.data.state !== "INDEXADO") {
             setUploadStatus(`Estado: ${res.data.state}`);
           } else {
             setUploadStatus("Archivo subido exitosamente");
