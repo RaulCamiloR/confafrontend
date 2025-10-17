@@ -416,6 +416,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
               <div
                 className={`p-2 mb-4 rounded text-sm ${
                   uploadStatus.includes("error") ||
+                  uploadStatus.includes("ERROR") ||
                   uploadStatus.includes("Error")
                     ? "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"
                     : uploadStatus.includes("exitosamente")
