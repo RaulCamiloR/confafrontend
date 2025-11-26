@@ -52,14 +52,14 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
         selectedDate.getMonth(),
         selectedDate.getDate(),
       );
-      night.setHours(19, 0, 0);
+      night.setHours(18, 0, 0);
 
       if (selectedDate < morning) {
         newErrors.scheduledDate =
-          "La hora programada debe estar en el rango permitido (7:00 AM a 7:00 PM)";
+          "La hora programada debe estar en el rango permitido (7:00 AM a 6:00 PM)";
       } else if (night < selectedDate) {
         newErrors.scheduledDate =
-          "La hora programada debe estar en el rango permitido (7:00 AM a 7:00 PM)";
+          "La hora programada debe estar en el rango permitido (7:00 AM a 6:00 PM)";
       }
     }
 
@@ -282,7 +282,7 @@ const StepZero: React.FC<StepZeroProps> = ({ onNext }) => {
                 value={formatTimeForInput(campaign.scheduledDate)}
                 onChange={handleTimeChange}
                 min={getMinTime()}
-                max="19:00"
+                max="18:00"
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white ${
                   errors.scheduledDate
                     ? "border-red-500 dark:border-red-500"
