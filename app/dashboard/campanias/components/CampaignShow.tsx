@@ -9,6 +9,7 @@ interface Campaign {
   name?: string;
   type: string;
   status: string;
+  channel: string;
   senders: any; // O define una interfaz específica si conoces la estructura
 }
 const itemsPerPage = 9; // Mismo número que en la página de contactos
@@ -40,7 +41,7 @@ const CampaniasPage = ({
   // Cargar campañas al inicio
 
   const getChannelCampaigns = async (channelType: string) => {
-      setLoading(true);
+    setLoading(true);
     try {
       const { data } = await axios.get("/api/campaigns", {
         params: { channelType },
@@ -48,7 +49,7 @@ const CampaniasPage = ({
       return data.campaigns || [];
     } catch (error) {
       console.error("Error cargando campañas:", error);
-       return []; 
+      return [];
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ const CampaniasPage = ({
       selectedType === type
         ? "bg-orange-500 text-white"
         : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-  }`;
+    }`;
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
@@ -141,7 +142,11 @@ const CampaniasPage = ({
         ) : filteredCampaigns.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
             {displayedCampaigns.map((campaign) => (
-              <CampaniaCard key={campaign.id} campaign={campaign} />
+              <CampaniaCard
+                key={campaign.id}
+                campaign={campaign}
+                channel={selectedType}
+              />
             ))}
           </div>
         ) : (

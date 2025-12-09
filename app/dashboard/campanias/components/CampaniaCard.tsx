@@ -8,6 +8,7 @@ interface Campaign {
   name?: string;
   type: string;
   status: string;
+  channel: string;
   senders: any;
 }
 
@@ -20,7 +21,7 @@ export const CampaniaCard = ({ campaign }: CampaniaCardProps) => {
 
   const handleClick = () => {
     // Navegar a la página de detalle de la campaña
-    router.push(`/dashboard/campanias/${campaign?.id}`)
+    router.push(`/dashboard/campanias/${campaign?.id}?channel=${campaign?.channel}`)
   }
 
   return (
