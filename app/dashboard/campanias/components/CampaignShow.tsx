@@ -145,7 +145,6 @@ const CampaniasPage = ({
               <CampaniaCard
                 key={campaign.id}
                 campaign={campaign}
-                channel={selectedType}
               />
             ))}
           </div>

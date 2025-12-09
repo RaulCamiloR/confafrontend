@@ -24,7 +24,6 @@ export async function GET(request: Request) {
       },
     );
 
-    // console.log(response.headers);
     const buffer = Buffer.from(response.data, "base64");
 
     return new NextResponse(buffer, {
@@ -32,8 +31,6 @@ export async function GET(request: Request) {
       headers: {
         "Content-Type": response.headers["content-type"],
         "Content-Disposition": response.headers["content-disposition"],
-          // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        // "Content-Disposition": 'attachment; filename="reporte_llamadas.xlsx"',
       },
     });
     return NextResponse.json(response.data, { status: 200 });
