@@ -29,12 +29,12 @@ const CampaniasPage = ({
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [selectedType, setSelectedType] = useState<string>(
-    hasEmailPermission
-      ? "EMAIL"
-      : hasSmsPermission
-        ? "SMS"
-        : hasVoicePermission
-          ? "VOICE"
+    hasVoicePermission
+      ? "VOICE"
+      : hasEmailPermission
+        ? "EMAIL"
+        : hasSmsPermission
+          ? "SMS"
           : "",
   ); // Filtro por tipo
 
@@ -142,10 +142,7 @@ const CampaniasPage = ({
         ) : filteredCampaigns.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
             {displayedCampaigns.map((campaign) => (
-              <CampaniaCard
-                key={campaign.id}
-                campaign={campaign}
-              />
+              <CampaniaCard key={campaign.id} campaign={campaign} />
             ))}
           </div>
         ) : (
